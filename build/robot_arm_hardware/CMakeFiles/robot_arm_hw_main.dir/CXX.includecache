@@ -38,14 +38,6 @@ ros/builtin_message_traits.h
 ros/message_operations.h
 -
 
-/home/maven/robot_arm_ws/src/robot_arm_hardware/include/generic_hw_control_loop.h
-controller_manager/controller_manager.h
--
-hardware_interface/robot_hw.h
--
-time.h
--
-
 /home/maven/robot_arm_ws/src/robot_arm_hardware/include/generic_hw_interface.h
 ros/ros.h
 -
@@ -76,30 +68,10 @@ robot_arm_hardware/RobotArmCmd.h
 robot_arm_hardware/RobotArmState.h
 -
 
-/home/maven/robot_arm_ws/src/robot_arm_hardware/src/generic_hw_control_loop.cpp
-generic_hw_control_loop.h
--
-rosparam_shortcuts/rosparam_shortcuts.h
--
-
-/home/maven/robot_arm_ws/src/robot_arm_hardware/src/generic_hw_interface.cpp
-limits
--
-generic_hw_interface.h
--
-rosparam_shortcuts/rosparam_shortcuts.h
--
-
 /home/maven/robot_arm_ws/src/robot_arm_hardware/src/robot_arm_hw_interface.cpp
 robot_arm_hw_interface.h
 -
 rosparam_shortcuts/rosparam_shortcuts.h
--
-
-/home/maven/robot_arm_ws/src/robot_arm_hardware/src/robot_arm_hw_main.cpp
-generic_hw_control_loop.h
--
-robot_arm_hw_interface.h
 -
 
 /opt/ros/noetic/include/class_loader/class_loader.hpp

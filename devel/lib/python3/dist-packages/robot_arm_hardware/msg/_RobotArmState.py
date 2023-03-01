@@ -8,14 +8,14 @@ import struct
 
 
 class RobotArmState(genpy.Message):
-  _md5sum = "e41053815a970080ac5fe085d03a4199"
+  _md5sum = "d53385e21754d4b8e3401e31a5f53cfc"
   _type = "robot_arm_hardware/RobotArmState"
   _has_header = False  # flag to mark the presence of a Header object
-  _full_text = """float32[6] vel # actuator vel
-float32[6] pos #position in degree
-float32[6] encoder #encoder"""
+  _full_text = """float32[9] vel # actuator vel
+float32[8] pos #position in degree
+float32[8] encoder #encoder"""
   __slots__ = ['vel','pos','encoder']
-  _slot_types = ['float32[6]','float32[6]','float32[6]']
+  _slot_types = ['float32[9]','float32[8]','float32[8]']
 
   def __init__(self, *args, **kwds):
     """
@@ -35,15 +35,15 @@ float32[6] encoder #encoder"""
       super(RobotArmState, self).__init__(*args, **kwds)
       # message fields cannot be None, assign default values for those that are
       if self.vel is None:
-        self.vel = [0.] * 6
+        self.vel = [0.] * 9
       if self.pos is None:
-        self.pos = [0.] * 6
+        self.pos = [0.] * 8
       if self.encoder is None:
-        self.encoder = [0.] * 6
+        self.encoder = [0.] * 8
     else:
-      self.vel = [0.] * 6
-      self.pos = [0.] * 6
-      self.encoder = [0.] * 6
+      self.vel = [0.] * 9
+      self.pos = [0.] * 8
+      self.encoder = [0.] * 8
 
   def _get_types(self):
     """
@@ -57,9 +57,9 @@ float32[6] encoder #encoder"""
     :param buff: buffer, ``StringIO``
     """
     try:
-      buff.write(_get_struct_6f().pack(*self.vel))
-      buff.write(_get_struct_6f().pack(*self.pos))
-      buff.write(_get_struct_6f().pack(*self.encoder))
+      buff.write(_get_struct_9f().pack(*self.vel))
+      buff.write(_get_struct_8f().pack(*self.pos))
+      buff.write(_get_struct_8f().pack(*self.encoder))
     except struct.error as se: self._check_types(struct.error("%s: '%s' when writing '%s'" % (type(se), str(se), str(locals().get('_x', self)))))
     except TypeError as te: self._check_types(ValueError("%s: '%s' when writing '%s'" % (type(te), str(te), str(locals().get('_x', self)))))
 
@@ -73,14 +73,14 @@ float32[6] encoder #encoder"""
     try:
       end = 0
       start = end
-      end += 24
-      self.vel = _get_struct_6f().unpack(str[start:end])
+      end += 36
+      self.vel = _get_struct_9f().unpack(str[start:end])
       start = end
-      end += 24
-      self.pos = _get_struct_6f().unpack(str[start:end])
+      end += 32
+      self.pos = _get_struct_8f().unpack(str[start:end])
       start = end
-      end += 24
-      self.encoder = _get_struct_6f().unpack(str[start:end])
+      end += 32
+      self.encoder = _get_struct_8f().unpack(str[start:end])
       return self
     except struct.error as e:
       raise genpy.DeserializationError(e)  # most likely buffer underfill
@@ -110,14 +110,14 @@ float32[6] encoder #encoder"""
     try:
       end = 0
       start = end
-      end += 24
-      self.vel = numpy.frombuffer(str[start:end], dtype=numpy.float32, count=6)
+      end += 36
+      self.vel = numpy.frombuffer(str[start:end], dtype=numpy.float32, count=9)
       start = end
-      end += 24
-      self.pos = numpy.frombuffer(str[start:end], dtype=numpy.float32, count=6)
+      end += 32
+      self.pos = numpy.frombuffer(str[start:end], dtype=numpy.float32, count=8)
       start = end
-      end += 24
-      self.encoder = numpy.frombuffer(str[start:end], dtype=numpy.float32, count=6)
+      end += 32
+      self.encoder = numpy.frombuffer(str[start:end], dtype=numpy.float32, count=8)
       return self
     except struct.error as e:
       raise genpy.DeserializationError(e)  # most likely buffer underfill
@@ -126,9 +126,15 @@ _struct_I = genpy.struct_I
 def _get_struct_I():
     global _struct_I
     return _struct_I
-_struct_6f = None
-def _get_struct_6f():
-    global _struct_6f
-    if _struct_6f is None:
-        _struct_6f = struct.Struct("<6f")
-    return _struct_6f
+_struct_8f = None
+def _get_struct_8f():
+    global _struct_8f
+    if _struct_8f is None:
+        _struct_8f = struct.Struct("<8f")
+    return _struct_8f
+_struct_9f = None
+def _get_struct_9f():
+    global _struct_9f
+    if _struct_9f is None:
+        _struct_9f = struct.Struct("<9f")
+    return _struct_9f

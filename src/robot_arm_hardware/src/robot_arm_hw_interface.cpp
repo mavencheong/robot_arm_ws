@@ -20,19 +20,18 @@ namespace robot_arm_ns
     //                                &VacummHWInterface::wheelEncoderCallback, this);
 
 
-    robot_arm_cmd_pub =
-        nh.advertise<robot_arm_hardware::RobotArmCmd>("/robot_arm/cmd", 3);
+    robot_arm_cmd_pub = nh.advertise<robot_arm_hardware::RobotArmCmd>("/robot_arm/cmd", 3);
     ros::NodeHandle rpnh(nh_, "hardware_interface");
 
-    double robtArmVel[6];
+    double robtArmVel[num_joints_];
   }
 
   void RobotArmHWInterface::stateCallback(
       const robot_arm_hardware::RobotArmState::ConstPtr &msg)
   {
-    double angles[6];
-    double degrees[6];
-    double angles_delta[6];
+    double angles[num_joints_];
+    double degrees[num_joints_];
+    double angles_delta[num_joints_];
     for (int i = 0; i < num_joints_; i++)
     {
       degrees[i] = msg->pos[i];
@@ -62,16 +61,20 @@ namespace robot_arm_ns
   void RobotArmHWInterface::write(ros::Duration &elapsed_time)
   {
     // Safety
+    
+    enforceLimits(elapsed_time);
+
+
     static robot_arm_hardware::RobotArmCmd cmd;
     const double cmd_dt(elapsed_time.toSec());
     
     for (int i = 0; i < num_joints_; i++)
     {
       cmd.vel[i] = joint_velocity_command_[i];
-      cmd.pos[i] += (joint_velocity_command_[i] * cmd_dt);
+      cmd.pos[i] = angleToDegree(joint_position_command_[i]);
 
-      // joint_velocity_[i] = joint_velocity_command_[i];
-      // joint_position_[i] += (joint_velocity_command_[i] * cmd_dt);
+      joint_velocity_[i] = joint_velocity_command_[i];
+    joint_position_[i] = joint_position_command_[i];
 
 
       // ROS_INFO_STREAM_NAMED(
@@ -84,7 +87,7 @@ namespace robot_arm_ns
   void RobotArmHWInterface::enforceLimits(ros::Duration &period)
   {
     // Enforces position and velocity
-    //   pos_jnt_sat_interface_.enforceLimits(period);
+    pos_jnt_sat_interface_.enforceLimits(period);
   }
 
   

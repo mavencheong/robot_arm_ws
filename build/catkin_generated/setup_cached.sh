@@ -7,8 +7,4 @@
 # new environment variables
 
 # modified environment variables
-export CMAKE_PREFIX_PATH="/home/maven/robot_arm_ws/devel:$CMAKE_PREFIX_PATH"
-export LD_LIBRARY_PATH='/opt/ros/noetic/lib:/opt/ros/noetic/lib/x86_64-linux-gnu'
 export PWD='/home/maven/robot_arm_ws/build'
-export ROSLISP_PACKAGE_DIRECTORIES='/home/maven/robot_arm_ws/devel/share/common-lisp'
-export ROS_PACKAGE_PATH="/home/maven/robot_arm_ws/src:$ROS_PACKAGE_PATH"

@@ -8,13 +8,13 @@ import struct
 
 
 class RobotArmCmd(genpy.Message):
-  _md5sum = "2d5c067ef26721689a3bd1aab349074d"
+  _md5sum = "3d18602b275ad29bfcdcebe549a29615"
   _type = "robot_arm_hardware/RobotArmCmd"
   _has_header = False  # flag to mark the presence of a Header object
-  _full_text = """float32[6] vel #actuator vel
-float32[6] pos #actuator position"""
+  _full_text = """float32[8] vel #actuator vel
+float32[8] pos #actuator position"""
   __slots__ = ['vel','pos']
-  _slot_types = ['float32[6]','float32[6]']
+  _slot_types = ['float32[8]','float32[8]']
 
   def __init__(self, *args, **kwds):
     """
@@ -34,12 +34,12 @@ float32[6] pos #actuator position"""
       super(RobotArmCmd, self).__init__(*args, **kwds)
       # message fields cannot be None, assign default values for those that are
       if self.vel is None:
-        self.vel = [0.] * 6
+        self.vel = [0.] * 8
       if self.pos is None:
-        self.pos = [0.] * 6
+        self.pos = [0.] * 8
     else:
-      self.vel = [0.] * 6
-      self.pos = [0.] * 6
+      self.vel = [0.] * 8
+      self.pos = [0.] * 8
 
   def _get_types(self):
     """
@@ -53,8 +53,8 @@ float32[6] pos #actuator position"""
     :param buff: buffer, ``StringIO``
     """
     try:
-      buff.write(_get_struct_6f().pack(*self.vel))
-      buff.write(_get_struct_6f().pack(*self.pos))
+      buff.write(_get_struct_8f().pack(*self.vel))
+      buff.write(_get_struct_8f().pack(*self.pos))
     except struct.error as se: self._check_types(struct.error("%s: '%s' when writing '%s'" % (type(se), str(se), str(locals().get('_x', self)))))
     except TypeError as te: self._check_types(ValueError("%s: '%s' when writing '%s'" % (type(te), str(te), str(locals().get('_x', self)))))
 
@@ -68,11 +68,11 @@ float32[6] pos #actuator position"""
     try:
       end = 0
       start = end
-      end += 24
-      self.vel = _get_struct_6f().unpack(str[start:end])
+      end += 32
+      self.vel = _get_struct_8f().unpack(str[start:end])
       start = end
-      end += 24
-      self.pos = _get_struct_6f().unpack(str[start:end])
+      end += 32
+      self.pos = _get_struct_8f().unpack(str[start:end])
       return self
     except struct.error as e:
       raise genpy.DeserializationError(e)  # most likely buffer underfill
@@ -101,11 +101,11 @@ float32[6] pos #actuator position"""
     try:
       end = 0
       start = end
-      end += 24
-      self.vel = numpy.frombuffer(str[start:end], dtype=numpy.float32, count=6)
+      end += 32
+      self.vel = numpy.frombuffer(str[start:end], dtype=numpy.float32, count=8)
       start = end
-      end += 24
-      self.pos = numpy.frombuffer(str[start:end], dtype=numpy.float32, count=6)
+      end += 32
+      self.pos = numpy.frombuffer(str[start:end], dtype=numpy.float32, count=8)
       return self
     except struct.error as e:
       raise genpy.DeserializationError(e)  # most likely buffer underfill
@@ -114,9 +114,9 @@ _struct_I = genpy.struct_I
 def _get_struct_I():
     global _struct_I
     return _struct_I
-_struct_6f = None
-def _get_struct_6f():
-    global _struct_6f
-    if _struct_6f is None:
-        _struct_6f = struct.Struct("<6f")
-    return _struct_6f
+_struct_8f = None
+def _get_struct_8f():
+    global _struct_8f
+    if _struct_8f is None:
+        _struct_8f = struct.Struct("<8f")
+    return _struct_8f

@@ -26,13 +26,13 @@ class RobotArmCmd {
         this.vel = initObj.vel
       }
       else {
-        this.vel = new Array(6).fill(0);
+        this.vel = new Array(8).fill(0);
       }
       if (initObj.hasOwnProperty('pos')) {
         this.pos = initObj.pos
       }
       else {
-        this.pos = new Array(6).fill(0);
+        this.pos = new Array(8).fill(0);
       }
     }
   }
@@ -40,17 +40,17 @@ class RobotArmCmd {
   static serialize(obj, buffer, bufferOffset) {
     // Serializes a message object of type RobotArmCmd
     // Check that the constant length array field [vel] has the right length
-    if (obj.vel.length !== 6) {
-      throw new Error('Unable to serialize array field vel - length must be 6')
+    if (obj.vel.length !== 8) {
+      throw new Error('Unable to serialize array field vel - length must be 8')
     }
     // Serialize message field [vel]
-    bufferOffset = _arraySerializer.float32(obj.vel, buffer, bufferOffset, 6);
+    bufferOffset = _arraySerializer.float32(obj.vel, buffer, bufferOffset, 8);
     // Check that the constant length array field [pos] has the right length
-    if (obj.pos.length !== 6) {
-      throw new Error('Unable to serialize array field pos - length must be 6')
+    if (obj.pos.length !== 8) {
+      throw new Error('Unable to serialize array field pos - length must be 8')
     }
     // Serialize message field [pos]
-    bufferOffset = _arraySerializer.float32(obj.pos, buffer, bufferOffset, 6);
+    bufferOffset = _arraySerializer.float32(obj.pos, buffer, bufferOffset, 8);
     return bufferOffset;
   }
 
@@ -59,14 +59,14 @@ class RobotArmCmd {
     let len;
     let data = new RobotArmCmd(null);
     // Deserialize message field [vel]
-    data.vel = _arrayDeserializer.float32(buffer, bufferOffset, 6)
+    data.vel = _arrayDeserializer.float32(buffer, bufferOffset, 8)
     // Deserialize message field [pos]
-    data.pos = _arrayDeserializer.float32(buffer, bufferOffset, 6)
+    data.pos = _arrayDeserializer.float32(buffer, bufferOffset, 8)
     return data;
   }
 
   static getMessageSize(object) {
-    return 48;
+    return 64;
   }
 
   static datatype() {
@@ -76,14 +76,14 @@ class RobotArmCmd {
 
   static md5sum() {
     //Returns md5sum for a message object
-    return '2d5c067ef26721689a3bd1aab349074d';
+    return '3d18602b275ad29bfcdcebe549a29615';
   }
 
   static messageDefinition() {
     // Returns full string definition for message
     return `
-    float32[6] vel #actuator vel
-    float32[6] pos #actuator position
+    float32[8] vel #actuator vel
+    float32[8] pos #actuator position
     `;
   }
 
@@ -97,14 +97,14 @@ class RobotArmCmd {
       resolved.vel = msg.vel;
     }
     else {
-      resolved.vel = new Array(6).fill(0)
+      resolved.vel = new Array(8).fill(0)
     }
 
     if (msg.pos !== undefined) {
       resolved.pos = msg.pos;
     }
     else {
-      resolved.pos = new Array(6).fill(0)
+      resolved.pos = new Array(8).fill(0)
     }
 
     return resolved;

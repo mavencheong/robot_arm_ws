@@ -47,13 +47,13 @@ struct RobotArmState_
 
 
 
-   typedef boost::array<float, 6>  _vel_type;
+   typedef boost::array<float, 9>  _vel_type;
   _vel_type vel;
 
-   typedef boost::array<float, 6>  _pos_type;
+   typedef boost::array<float, 8>  _pos_type;
   _pos_type pos;
 
-   typedef boost::array<float, 6>  _encoder_type;
+   typedef boost::array<float, 8>  _encoder_type;
   _encoder_type encoder;
 
 
@@ -144,12 +144,12 @@ struct MD5Sum< ::robot_arm_hardware::RobotArmState_<ContainerAllocator> >
 {
   static const char* value()
   {
-    return "e41053815a970080ac5fe085d03a4199";
+    return "d53385e21754d4b8e3401e31a5f53cfc";
   }
 
   static const char* value(const ::robot_arm_hardware::RobotArmState_<ContainerAllocator>&) { return value(); }
-  static const uint64_t static_value1 = 0xe41053815a970080ULL;
-  static const uint64_t static_value2 = 0xac5fe085d03a4199ULL;
+  static const uint64_t static_value1 = 0xd53385e21754d4b8ULL;
+  static const uint64_t static_value2 = 0xe3401e31a5f53cfcULL;
 };
 
 template<class ContainerAllocator>
@@ -168,9 +168,9 @@ struct Definition< ::robot_arm_hardware::RobotArmState_<ContainerAllocator> >
 {
   static const char* value()
   {
-    return "float32[6] vel # actuator vel\n"
-"float32[6] pos #position in degree\n"
-"float32[6] encoder #encoder\n"
+    return "float32[9] vel # actuator vel\n"
+"float32[8] pos #position in degree\n"
+"float32[8] encoder #encoder\n"
 ;
   }
 

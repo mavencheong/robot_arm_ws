@@ -27,19 +27,19 @@ class RobotArmState {
         this.vel = initObj.vel
       }
       else {
-        this.vel = new Array(6).fill(0);
+        this.vel = new Array(9).fill(0);
       }
       if (initObj.hasOwnProperty('pos')) {
         this.pos = initObj.pos
       }
       else {
-        this.pos = new Array(6).fill(0);
+        this.pos = new Array(8).fill(0);
       }
       if (initObj.hasOwnProperty('encoder')) {
         this.encoder = initObj.encoder
       }
       else {
-        this.encoder = new Array(6).fill(0);
+        this.encoder = new Array(8).fill(0);
       }
     }
   }
@@ -47,23 +47,23 @@ class RobotArmState {
   static serialize(obj, buffer, bufferOffset) {
     // Serializes a message object of type RobotArmState
     // Check that the constant length array field [vel] has the right length
-    if (obj.vel.length !== 6) {
-      throw new Error('Unable to serialize array field vel - length must be 6')
+    if (obj.vel.length !== 9) {
+      throw new Error('Unable to serialize array field vel - length must be 9')
     }
     // Serialize message field [vel]
-    bufferOffset = _arraySerializer.float32(obj.vel, buffer, bufferOffset, 6);
+    bufferOffset = _arraySerializer.float32(obj.vel, buffer, bufferOffset, 9);
     // Check that the constant length array field [pos] has the right length
-    if (obj.pos.length !== 6) {
-      throw new Error('Unable to serialize array field pos - length must be 6')
+    if (obj.pos.length !== 8) {
+      throw new Error('Unable to serialize array field pos - length must be 8')
     }
     // Serialize message field [pos]
-    bufferOffset = _arraySerializer.float32(obj.pos, buffer, bufferOffset, 6);
+    bufferOffset = _arraySerializer.float32(obj.pos, buffer, bufferOffset, 8);
     // Check that the constant length array field [encoder] has the right length
-    if (obj.encoder.length !== 6) {
-      throw new Error('Unable to serialize array field encoder - length must be 6')
+    if (obj.encoder.length !== 8) {
+      throw new Error('Unable to serialize array field encoder - length must be 8')
     }
     // Serialize message field [encoder]
-    bufferOffset = _arraySerializer.float32(obj.encoder, buffer, bufferOffset, 6);
+    bufferOffset = _arraySerializer.float32(obj.encoder, buffer, bufferOffset, 8);
     return bufferOffset;
   }
 
@@ -72,16 +72,16 @@ class RobotArmState {
     let len;
     let data = new RobotArmState(null);
     // Deserialize message field [vel]
-    data.vel = _arrayDeserializer.float32(buffer, bufferOffset, 6)
+    data.vel = _arrayDeserializer.float32(buffer, bufferOffset, 9)
     // Deserialize message field [pos]
-    data.pos = _arrayDeserializer.float32(buffer, bufferOffset, 6)
+    data.pos = _arrayDeserializer.float32(buffer, bufferOffset, 8)
     // Deserialize message field [encoder]
-    data.encoder = _arrayDeserializer.float32(buffer, bufferOffset, 6)
+    data.encoder = _arrayDeserializer.float32(buffer, bufferOffset, 8)
     return data;
   }
 
   static getMessageSize(object) {
-    return 72;
+    return 100;
   }
 
   static datatype() {
@@ -91,15 +91,15 @@ class RobotArmState {
 
   static md5sum() {
     //Returns md5sum for a message object
-    return 'e41053815a970080ac5fe085d03a4199';
+    return 'd53385e21754d4b8e3401e31a5f53cfc';
   }
 
   static messageDefinition() {
     // Returns full string definition for message
     return `
-    float32[6] vel # actuator vel
-    float32[6] pos #position in degree
-    float32[6] encoder #encoder
+    float32[9] vel # actuator vel
+    float32[8] pos #position in degree
+    float32[8] encoder #encoder
     `;
   }
 
@@ -113,21 +113,21 @@ class RobotArmState {
       resolved.vel = msg.vel;
     }
     else {
-      resolved.vel = new Array(6).fill(0)
+      resolved.vel = new Array(9).fill(0)
     }
 
     if (msg.pos !== undefined) {
       resolved.pos = msg.pos;
     }
     else {
-      resolved.pos = new Array(6).fill(0)
+      resolved.pos = new Array(8).fill(0)
     }
 
     if (msg.encoder !== undefined) {
       resolved.encoder = msg.encoder;
     }
     else {
-      resolved.encoder = new Array(6).fill(0)
+      resolved.encoder = new Array(8).fill(0)
     }
 
     return resolved;

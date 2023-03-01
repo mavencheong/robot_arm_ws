@@ -11,17 +11,17 @@
     :reader vel
     :initarg :vel
     :type (cl:vector cl:float)
-   :initform (cl:make-array 6 :element-type 'cl:float :initial-element 0.0))
+   :initform (cl:make-array 9 :element-type 'cl:float :initial-element 0.0))
    (pos
     :reader pos
     :initarg :pos
     :type (cl:vector cl:float)
-   :initform (cl:make-array 6 :element-type 'cl:float :initial-element 0.0))
+   :initform (cl:make-array 8 :element-type 'cl:float :initial-element 0.0))
    (encoder
     :reader encoder
     :initarg :encoder
     :type (cl:vector cl:float)
-   :initform (cl:make-array 6 :element-type 'cl:float :initial-element 0.0)))
+   :initform (cl:make-array 8 :element-type 'cl:float :initial-element 0.0)))
 )
 
 (cl:defclass RobotArmState (<RobotArmState>)
@@ -69,27 +69,27 @@
 )
 (cl:defmethod roslisp-msg-protocol:deserialize ((msg <RobotArmState>) istream)
   "Deserializes a message object of type '<RobotArmState>"
-  (cl:setf (cl:slot-value msg 'vel) (cl:make-array 6))
+  (cl:setf (cl:slot-value msg 'vel) (cl:make-array 9))
   (cl:let ((vals (cl:slot-value msg 'vel)))
-    (cl:dotimes (i 6)
+    (cl:dotimes (i 9)
     (cl:let ((bits 0))
       (cl:setf (cl:ldb (cl:byte 8 0) bits) (cl:read-byte istream))
       (cl:setf (cl:ldb (cl:byte 8 8) bits) (cl:read-byte istream))
       (cl:setf (cl:ldb (cl:byte 8 16) bits) (cl:read-byte istream))
       (cl:setf (cl:ldb (cl:byte 8 24) bits) (cl:read-byte istream))
     (cl:setf (cl:aref vals i) (roslisp-utils:decode-single-float-bits bits)))))
-  (cl:setf (cl:slot-value msg 'pos) (cl:make-array 6))
+  (cl:setf (cl:slot-value msg 'pos) (cl:make-array 8))
   (cl:let ((vals (cl:slot-value msg 'pos)))
-    (cl:dotimes (i 6)
+    (cl:dotimes (i 8)
     (cl:let ((bits 0))
       (cl:setf (cl:ldb (cl:byte 8 0) bits) (cl:read-byte istream))
       (cl:setf (cl:ldb (cl:byte 8 8) bits) (cl:read-byte istream))
       (cl:setf (cl:ldb (cl:byte 8 16) bits) (cl:read-byte istream))
       (cl:setf (cl:ldb (cl:byte 8 24) bits) (cl:read-byte istream))
     (cl:setf (cl:aref vals i) (roslisp-utils:decode-single-float-bits bits)))))
-  (cl:setf (cl:slot-value msg 'encoder) (cl:make-array 6))
+  (cl:setf (cl:slot-value msg 'encoder) (cl:make-array 8))
   (cl:let ((vals (cl:slot-value msg 'encoder)))
-    (cl:dotimes (i 6)
+    (cl:dotimes (i 8)
     (cl:let ((bits 0))
       (cl:setf (cl:ldb (cl:byte 8 0) bits) (cl:read-byte istream))
       (cl:setf (cl:ldb (cl:byte 8 8) bits) (cl:read-byte istream))
@@ -106,16 +106,16 @@
   "robot_arm_hardware/RobotArmState")
 (cl:defmethod roslisp-msg-protocol:md5sum ((type (cl:eql '<RobotArmState>)))
   "Returns md5sum for a message object of type '<RobotArmState>"
-  "e41053815a970080ac5fe085d03a4199")
+  "d53385e21754d4b8e3401e31a5f53cfc")
 (cl:defmethod roslisp-msg-protocol:md5sum ((type (cl:eql 'RobotArmState)))
   "Returns md5sum for a message object of type 'RobotArmState"
-  "e41053815a970080ac5fe085d03a4199")
+  "d53385e21754d4b8e3401e31a5f53cfc")
 (cl:defmethod roslisp-msg-protocol:message-definition ((type (cl:eql '<RobotArmState>)))
   "Returns full string definition for message of type '<RobotArmState>"
-  (cl:format cl:nil "float32[6] vel # actuator vel~%float32[6] pos #position in degree~%float32[6] encoder #encoder~%~%"))
+  (cl:format cl:nil "float32[9] vel # actuator vel~%float32[8] pos #position in degree~%float32[8] encoder #encoder~%~%"))
 (cl:defmethod roslisp-msg-protocol:message-definition ((type (cl:eql 'RobotArmState)))
   "Returns full string definition for message of type 'RobotArmState"
-  (cl:format cl:nil "float32[6] vel # actuator vel~%float32[6] pos #position in degree~%float32[6] encoder #encoder~%~%"))
+  (cl:format cl:nil "float32[9] vel # actuator vel~%float32[8] pos #position in degree~%float32[8] encoder #encoder~%~%"))
 (cl:defmethod roslisp-msg-protocol:serialization-length ((msg <RobotArmState>))
   (cl:+ 0
      0 (cl:reduce #'cl:+ (cl:slot-value msg 'vel) :key #'(cl:lambda (ele) (cl:declare (cl:ignorable ele)) (cl:+ 4)))

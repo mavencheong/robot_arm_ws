@@ -5,7 +5,8 @@
 # This file includes the relevant testing commands required for 
 # testing this directory and lists subdirectories to be tested as well.
 subdirs("gtest")
+subdirs("robot_arm_bringup")
+subdirs("robot_arm_control")
 subdirs("robot_arm_moveit")
-subdirs("robot_arm_controller")
 subdirs("robot_arm_description")
 subdirs("robot_arm_hardware")

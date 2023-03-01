@@ -131,8 +131,9 @@ endif()
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
   include("/home/maven/robot_arm_ws/build/gtest/cmake_install.cmake")
+  include("/home/maven/robot_arm_ws/build/robot_arm_bringup/cmake_install.cmake")
+  include("/home/maven/robot_arm_ws/build/robot_arm_control/cmake_install.cmake")
   include("/home/maven/robot_arm_ws/build/robot_arm_moveit/cmake_install.cmake")
-  include("/home/maven/robot_arm_ws/build/robot_arm_controller/cmake_install.cmake")
   include("/home/maven/robot_arm_ws/build/robot_arm_description/cmake_install.cmake")
   include("/home/maven/robot_arm_ws/build/robot_arm_hardware/cmake_install.cmake")
 
