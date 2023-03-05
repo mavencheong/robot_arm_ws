@@ -18,7 +18,8 @@ GenericHWInterface::GenericHWInterface(const ros::NodeHandle &nh,
     urdf_model_ = urdf_model;
 
   // Load rosparams
-  ros::NodeHandle rpnh(nh_, "hardware_interface"); // TODO(davetcoleman): change the namespace to
+  ros::NodeHandle rpnh(
+      nh_, "hardware_interface"); // TODO(davetcoleman): change the namespace to
                                   // "generic_hw_interface" aka name_
   std::size_t error = 0;
   error += !rosparam_shortcuts::get(name_, rpnh, "joints", joint_names_);
@@ -37,11 +38,13 @@ void GenericHWInterface::init() {
   joint_position_command_.resize(num_joints_, 0.0);
   joint_velocity_command_.resize(num_joints_, 0.0);
   joint_effort_command_.resize(num_joints_, 0.0);
+  joint_accel_command_.resize(num_joints_, 0.0);
 
   // Limits
   joint_position_lower_limits_.resize(num_joints_, 0.0);
   joint_position_upper_limits_.resize(num_joints_, 0.0);
   joint_velocity_limits_.resize(num_joints_, 0.0);
+  joint_accel_limits_.resize(num_joints_, 0.0);
   joint_effort_limits_.resize(num_joints_, 0.0);
 
   // Initialize interfaces for each joint
@@ -77,6 +80,14 @@ void GenericHWInterface::init() {
             &joint_effort_command_[joint_id]);
     effort_joint_interface_.registerHandle(joint_handle_effort);
 
+    // hardware_interface::PosVelAccJointHandle joint_handle_pos_vel_acc =
+    //     hardware_interface::PosVelAccJointHandle(joint_state_interface_.getHandle(joint_names_[joint_id]),
+    //       &joint_position_command_[joint_id], 
+    //       &joint_velocity_command_[joint_id],
+    //       &joint_accel_command_[joint_id]);
+    // pos_vel_acc_joint_interface_.registerHandle(joint_handle_pos_vel_acc);
+
+
     // Load the joint limits
     registerJointLimits(joint_handle_position, joint_handle_velocity,
                         joint_handle_effort, joint_id);
@@ -86,6 +97,7 @@ void GenericHWInterface::init() {
   registerInterface(&position_joint_interface_); // From RobotHW base class.
   registerInterface(&velocity_joint_interface_); // From RobotHW base class.
   registerInterface(&effort_joint_interface_);   // From RobotHW base class.
+  // registerInterface(&pos_vel_acc_joint_interface_);   // From RobotHW base class.
 
   ROS_INFO_STREAM_NAMED(name_, "GenericHWInterface Ready.");
 }

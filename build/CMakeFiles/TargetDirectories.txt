@@ -35,6 +35,14 @@
 /home/maven/robot_arm_ws/build/gtest/googletest/CMakeFiles/test.dir
 /home/maven/robot_arm_ws/build/gtest/googletest/CMakeFiles/gtest_main.dir
 /home/maven/robot_arm_ws/build/gtest/googletest/CMakeFiles/gtest.dir
+/home/maven/robot_arm_ws/build/robot_arm_arduino/CMakeFiles/install/strip.dir
+/home/maven/robot_arm_ws/build/robot_arm_arduino/CMakeFiles/install/local.dir
+/home/maven/robot_arm_ws/build/robot_arm_arduino/CMakeFiles/install.dir
+/home/maven/robot_arm_ws/build/robot_arm_arduino/CMakeFiles/list_install_components.dir
+/home/maven/robot_arm_ws/build/robot_arm_arduino/CMakeFiles/rebuild_cache.dir
+/home/maven/robot_arm_ws/build/robot_arm_arduino/CMakeFiles/edit_cache.dir
+/home/maven/robot_arm_ws/build/robot_arm_arduino/CMakeFiles/test.dir
+/home/maven/robot_arm_ws/build/robot_arm_arduino/CMakeFiles/_catkin_empty_exported_target.dir
 /home/maven/robot_arm_ws/build/robot_arm_bringup/CMakeFiles/install/strip.dir
 /home/maven/robot_arm_ws/build/robot_arm_bringup/CMakeFiles/install/local.dir
 /home/maven/robot_arm_ws/build/robot_arm_bringup/CMakeFiles/install.dir
@@ -42,7 +50,6 @@
 /home/maven/robot_arm_ws/build/robot_arm_bringup/CMakeFiles/rebuild_cache.dir
 /home/maven/robot_arm_ws/build/robot_arm_bringup/CMakeFiles/edit_cache.dir
 /home/maven/robot_arm_ws/build/robot_arm_bringup/CMakeFiles/test.dir
-/home/maven/robot_arm_ws/build/robot_arm_bringup/CMakeFiles/_catkin_empty_exported_target.dir
 /home/maven/robot_arm_ws/build/robot_arm_control/CMakeFiles/install/strip.dir
 /home/maven/robot_arm_ws/build/robot_arm_control/CMakeFiles/install/local.dir
 /home/maven/robot_arm_ws/build/robot_arm_control/CMakeFiles/install.dir

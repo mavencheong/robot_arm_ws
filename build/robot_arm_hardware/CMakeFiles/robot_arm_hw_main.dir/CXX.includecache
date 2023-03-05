@@ -49,6 +49,8 @@ hardware_interface/joint_command_interface.h
 -
 hardware_interface/joint_state_interface.h
 -
+hardware_interface/posvelacc_command_interface.h
+-
 hardware_interface/robot_hw.h
 -
 joint_limits_interface/joint_limits.h
@@ -66,6 +68,14 @@ generic_hw_interface.h
 robot_arm_hardware/RobotArmCmd.h
 -
 robot_arm_hardware/RobotArmState.h
+-
+
+/home/maven/robot_arm_ws/src/robot_arm_hardware/src/generic_hw_interface.cpp
+limits
+-
+generic_hw_interface.h
+-
+rosparam_shortcuts/rosparam_shortcuts.h
 -
 
 /home/maven/robot_arm_ws/src/robot_arm_hardware/src/robot_arm_hw_interface.cpp
@@ -652,6 +662,26 @@ hardware_interface/internal/hardware_resource_manager.h
 cassert
 -
 string
+-
+
+/opt/ros/noetic/include/hardware_interface/posvel_command_interface.h
+cassert
+-
+string
+-
+hardware_interface/internal/hardware_resource_manager.h
+-
+hardware_interface/joint_state_interface.h
+-
+
+/opt/ros/noetic/include/hardware_interface/posvelacc_command_interface.h
+cassert
+-
+string
+-
+hardware_interface/internal/hardware_resource_manager.h
+-
+hardware_interface/posvel_command_interface.h
 -
 
 /opt/ros/noetic/include/hardware_interface/robot_hw.h

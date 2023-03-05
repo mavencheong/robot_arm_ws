@@ -73,8 +73,8 @@ namespace robot_arm_ns
       cmd.vel[i] = joint_velocity_command_[i];
       cmd.pos[i] = angleToDegree(joint_position_command_[i]);
 
-      joint_velocity_[i] = joint_velocity_command_[i];
-    joint_position_[i] = joint_position_command_[i];
+    //   joint_velocity_[i] = joint_velocity_command_[i];
+    // joint_position_[i] = joint_position_command_[i];
 
 
       // ROS_INFO_STREAM_NAMED(

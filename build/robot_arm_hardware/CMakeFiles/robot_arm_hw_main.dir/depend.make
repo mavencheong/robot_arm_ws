@@ -347,6 +347,8 @@ robot_arm_hardware/CMakeFiles/robot_arm_hw_main.dir/src/generic_hw_interface.cpp
 robot_arm_hardware/CMakeFiles/robot_arm_hw_main.dir/src/generic_hw_interface.cpp.o: /opt/ros/noetic/include/hardware_interface/internal/resource_manager.h
 robot_arm_hardware/CMakeFiles/robot_arm_hw_main.dir/src/generic_hw_interface.cpp.o: /opt/ros/noetic/include/hardware_interface/joint_command_interface.h
 robot_arm_hardware/CMakeFiles/robot_arm_hw_main.dir/src/generic_hw_interface.cpp.o: /opt/ros/noetic/include/hardware_interface/joint_state_interface.h
+robot_arm_hardware/CMakeFiles/robot_arm_hw_main.dir/src/generic_hw_interface.cpp.o: /opt/ros/noetic/include/hardware_interface/posvel_command_interface.h
+robot_arm_hardware/CMakeFiles/robot_arm_hw_main.dir/src/generic_hw_interface.cpp.o: /opt/ros/noetic/include/hardware_interface/posvelacc_command_interface.h
 robot_arm_hardware/CMakeFiles/robot_arm_hw_main.dir/src/generic_hw_interface.cpp.o: /opt/ros/noetic/include/hardware_interface/robot_hw.h
 robot_arm_hardware/CMakeFiles/robot_arm_hw_main.dir/src/generic_hw_interface.cpp.o: /opt/ros/noetic/include/joint_limits_interface/joint_limits.h
 robot_arm_hardware/CMakeFiles/robot_arm_hw_main.dir/src/generic_hw_interface.cpp.o: /opt/ros/noetic/include/joint_limits_interface/joint_limits_interface.h
@@ -662,6 +664,8 @@ robot_arm_hardware/CMakeFiles/robot_arm_hw_main.dir/src/robot_arm_hw_interface.c
 robot_arm_hardware/CMakeFiles/robot_arm_hw_main.dir/src/robot_arm_hw_interface.cpp.o: /opt/ros/noetic/include/hardware_interface/internal/resource_manager.h
 robot_arm_hardware/CMakeFiles/robot_arm_hw_main.dir/src/robot_arm_hw_interface.cpp.o: /opt/ros/noetic/include/hardware_interface/joint_command_interface.h
 robot_arm_hardware/CMakeFiles/robot_arm_hw_main.dir/src/robot_arm_hw_interface.cpp.o: /opt/ros/noetic/include/hardware_interface/joint_state_interface.h
+robot_arm_hardware/CMakeFiles/robot_arm_hw_main.dir/src/robot_arm_hw_interface.cpp.o: /opt/ros/noetic/include/hardware_interface/posvel_command_interface.h
+robot_arm_hardware/CMakeFiles/robot_arm_hw_main.dir/src/robot_arm_hw_interface.cpp.o: /opt/ros/noetic/include/hardware_interface/posvelacc_command_interface.h
 robot_arm_hardware/CMakeFiles/robot_arm_hw_main.dir/src/robot_arm_hw_interface.cpp.o: /opt/ros/noetic/include/hardware_interface/robot_hw.h
 robot_arm_hardware/CMakeFiles/robot_arm_hw_main.dir/src/robot_arm_hw_interface.cpp.o: /opt/ros/noetic/include/joint_limits_interface/joint_limits.h
 robot_arm_hardware/CMakeFiles/robot_arm_hw_main.dir/src/robot_arm_hw_interface.cpp.o: /opt/ros/noetic/include/joint_limits_interface/joint_limits_interface.h
@@ -975,6 +979,8 @@ robot_arm_hardware/CMakeFiles/robot_arm_hw_main.dir/src/robot_arm_hw_main.cpp.o:
 robot_arm_hardware/CMakeFiles/robot_arm_hw_main.dir/src/robot_arm_hw_main.cpp.o: /opt/ros/noetic/include/hardware_interface/internal/resource_manager.h
 robot_arm_hardware/CMakeFiles/robot_arm_hw_main.dir/src/robot_arm_hw_main.cpp.o: /opt/ros/noetic/include/hardware_interface/joint_command_interface.h
 robot_arm_hardware/CMakeFiles/robot_arm_hw_main.dir/src/robot_arm_hw_main.cpp.o: /opt/ros/noetic/include/hardware_interface/joint_state_interface.h
+robot_arm_hardware/CMakeFiles/robot_arm_hw_main.dir/src/robot_arm_hw_main.cpp.o: /opt/ros/noetic/include/hardware_interface/posvel_command_interface.h
+robot_arm_hardware/CMakeFiles/robot_arm_hw_main.dir/src/robot_arm_hw_main.cpp.o: /opt/ros/noetic/include/hardware_interface/posvelacc_command_interface.h
 robot_arm_hardware/CMakeFiles/robot_arm_hw_main.dir/src/robot_arm_hw_main.cpp.o: /opt/ros/noetic/include/hardware_interface/robot_hw.h
 robot_arm_hardware/CMakeFiles/robot_arm_hw_main.dir/src/robot_arm_hw_main.cpp.o: /opt/ros/noetic/include/joint_limits_interface/joint_limits.h
 robot_arm_hardware/CMakeFiles/robot_arm_hw_main.dir/src/robot_arm_hw_main.cpp.o: /opt/ros/noetic/include/joint_limits_interface/joint_limits_interface.h

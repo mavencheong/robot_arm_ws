@@ -16,7 +16,7 @@ robot_arm_hardware::RobotArmState robotArmState;
 ros::Publisher robot_arm_state_pub("/robot_arm/state", &robotArmState);
 
 
-#define ROS_SERIAL false
+#define ROS_SERIAL true
 
 #define MOTOR_STEPS 800
 //Motors PINS
@@ -41,7 +41,7 @@ ros::Publisher robot_arm_state_pub("/robot_arm/state", &robotArmState);
 
 
 
-#define MOTOR1_MAXSPEED 800
+#define MOTOR1_MAXSPEED 5000
 #define MOTOR2_MAXSPEED 5000
 #define MOTOR3_MAXSPEED 5000
 #define MOTOR4_MAXSPEED 5000
@@ -58,12 +58,12 @@ ros::Publisher robot_arm_state_pub("/robot_arm/state", &robotArmState);
 
 
 
-const long MOTOR1_RATIO = (230.0 / 20.0) * 3200.0;
-const long MOTOR2_RATIO = (150.0 /20.0) * 15.0 * 3200.0; 
-const long MOTOR3_RATIO = (150.0 /20.0) * 15.0 * 3200.0; 
-const long MOTOR4_RATIO = (100.0 /20.0) * 11.0 * 3200.0; 
-const long MOTOR5_RATIO = (100.0 /20.0) * 11.0 * 3200.0; 
-const long MOTOR6_RATIO = (100.0 /20.0) * 11.0 * 3200.0; 
+const long MOTOR1_RATIO = (230.0 / 20.0) * 1600.0;
+const long MOTOR2_RATIO = (150.0 /20.0) * 15.0 * 1600.0; 
+const long MOTOR3_RATIO = (150.0 /20.0) * 15.0 * 1600.0; 
+const long MOTOR4_RATIO = (100.0 /20.0) * 11.0 * 1600.0; 
+const long MOTOR5_RATIO = (100.0 /20.0) * 11.0 * 1600.0; 
+const long MOTOR6_RATIO = (100.0 /20.0) * 11.0 * 1600.0; 
 
 const long ENCODER1_RATIO = (230.0 /20.0) * 1200.0;
 const long ENCODER2_RATIO = (150.0 /20.0) * 1200.0;
@@ -102,9 +102,15 @@ IRAM_ATTR void encoder1Position()
 
 
 void robot_arm_cmd_callback(const robot_arm_hardware::RobotArmCmd& cmd){
-    for(int i = 0; i < 6; i++){
-      moveDegrees(i, cmd.pos[i]);;      
-    }    
+    
+      moveDegrees(0, -(cmd.pos[0]));
+      moveDegrees(1, (cmd.pos[1]));      
+      moveDegrees(2, -(cmd.pos[2]));
+      moveDegrees(3, -(cmd.pos[3]));
+      moveDegrees(4, -(cmd.pos[4]));
+      moveDegrees(5, -(cmd.pos[5]));
+      
+    
 }
 
 ros::Subscriber<robot_arm_hardware::RobotArmCmd> robot_arm_cmd_sub("/robot_arm/cmd", &robot_arm_cmd_callback);
@@ -150,7 +156,7 @@ void setup() {
 
   //  Serial.print(encoder1->getPosition());    
 
-  initPos();
+  // initPos();
 }
 
 void runSteppers(){
@@ -163,6 +169,14 @@ void moveDegrees(int stepper, double degree){
 
   steppersPos[stepper] = long(steps);
 }
+
+
+double stepsToDegree(int stepper, long steps){
+  double degree = ((double)steps / (double)stepperFullTurn[stepper]) * 360.0; 
+
+  return degree;   
+}
+
 
 long tempStepperPos = 0;
 double tempEncoderPos = 0;
@@ -228,7 +242,8 @@ void loop() {
     //   steppers[1].moveTo(steppersPos[1]);
     // } 
 
-    // msteppers.moveTo(steppersPos);
+     msteppers.moveTo(steppersPos);
+     msteppers.runSpeedToPosition();
     // runSteppers();    
     // if (!msteppers.run()){
       // if (tempStepperPos != stepper1CurrentPos){
@@ -255,22 +270,23 @@ void loop() {
     // steppers[2].run();
     // steppers[3].run();
 
-    for (int i = 0; i < 6; i++){
-      steppers[i].moveTo(steppersPos[i]);      
-    }
+    // for (int i = 0; i < 6; i++){
+    //   steppers[i].moveTo(steppersPos[i]);      
+    // }
     
-    for (int i = 0; i < 6; i++){      
-      steppers[i].run();
+    // for (int i = 0; i < 6; i++){      
+    //   steppers[i].run();
+    // }
 
  
-    }
-
- 
-    
+  if (ROS_SERIAL) {
+    publish_robot_state();
+  }
     
     // steppers[1].moveTo(steppersPos[1]);
     // steppers[2].moveTo(steppersPos[2]);
     // steppers[3].moveTo(steppersPos[3]);     
+    delay(1);    
   }
   // encoder1->tick();
   // encoder2->tick();
@@ -324,4 +340,19 @@ void readCommand(){
     // steppers[3].moveTo(steppersPos[3]);
     
   }
+
 }
+
+void publish_robot_state(){
+
+  robotArmState.pos[0] = -(stepsToDegree(0, steppers[0].currentPosition())); 
+  robotArmState.pos[1] = (stepsToDegree(1, steppers[1].currentPosition())); 
+  robotArmState.pos[2] = -(stepsToDegree(2, steppers[2].currentPosition())); 
+  robotArmState.pos[3] = -(stepsToDegree(3, steppers[3].currentPosition())); 
+  robotArmState.pos[4] = -(stepsToDegree(4, steppers[4].currentPosition())); 
+  robotArmState.pos[5] = -(stepsToDegree(5, steppers[5].currentPosition())); 
+
+  
+  robot_arm_state_pub.publish(&robotArmState);
+}
+

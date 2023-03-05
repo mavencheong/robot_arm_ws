@@ -12,6 +12,7 @@
 #include <controller_manager/controller_manager.h>
 #include <hardware_interface/joint_command_interface.h>
 #include <hardware_interface/joint_state_interface.h>
+#include <hardware_interface/posvelacc_command_interface.h>
 #include <hardware_interface/robot_hw.h>
 #include <joint_limits_interface/joint_limits.h>
 #include <joint_limits_interface/joint_limits_interface.h>
@@ -120,7 +121,7 @@ protected:
   hardware_interface::PositionJointInterface    position_joint_interface_;
   hardware_interface::VelocityJointInterface    velocity_joint_interface_;
   hardware_interface::EffortJointInterface      effort_joint_interface_;
-
+  hardware_interface::PosVelAccJointInterface   pos_vel_acc_joint_interface_;
   // Joint limits interfaces - Saturation
   joint_limits_interface::PositionJointSaturationInterface  pos_jnt_sat_interface_;
   joint_limits_interface::VelocityJointSaturationInterface  vel_jnt_sat_interface_;
@@ -149,11 +150,13 @@ protected:
   std::vector<double> joint_position_command_;
   std::vector<double> joint_velocity_command_;
   std::vector<double> joint_effort_command_;
+  std::vector<double> joint_accel_command_;
 
   // Copy of limits, in case we need them later in our control stack
   std::vector<double> joint_position_lower_limits_;
   std::vector<double> joint_position_upper_limits_;
   std::vector<double> joint_velocity_limits_;
+  std::vector<double> joint_accel_limits_;
   std::vector<double> joint_effort_limits_;
 
 }; // class
