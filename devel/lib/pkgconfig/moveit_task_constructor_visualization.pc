@@ -1,0 +1,8 @@
+prefix=/home/maven/robot_arm_ws/devel
+
+Name: moveit_task_constructor_visualization
+Description: Description of moveit_task_constructor_visualization
+Version: 0.1.3
+Cflags: -I/home/maven/robot_arm_ws/src/moveit_task_constructor/visualization/visualization_tools/include
+Libs: -L${prefix}/lib -lmoveit_task_visualization_tools -lmotion_planning_tasks_utils
+Requires: moveit_core moveit_task_constructor_msgs roscpp rviz

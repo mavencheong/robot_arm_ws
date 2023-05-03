@@ -136,6 +136,7 @@ if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   include("/home/maven/robot_arm_ws/build/robot_arm_control/cmake_install.cmake")
   include("/home/maven/robot_arm_ws/build/robot_arm_moveit/cmake_install.cmake")
   include("/home/maven/robot_arm_ws/build/robot_arm_description/cmake_install.cmake")
+  include("/home/maven/robot_arm_ws/build/robot_arm_move/cmake_install.cmake")
   include("/home/maven/robot_arm_ws/build/robot_arm_hardware/cmake_install.cmake")
 
 endif()

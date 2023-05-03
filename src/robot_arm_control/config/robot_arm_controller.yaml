@@ -11,7 +11,7 @@ gazebo_ros_control:
       d: 0.0
 
 generic_hw_control_loop:
-  loop_hz: 100 # 250 to emulate serial pause COMMAND_PERIOD 0.0055 , SERIAL_PAUSE 0.004
+  loop_hz: 20 # 250 to emulate serial pause COMMAND_PERIOD 0.0055 , SERIAL_PAUSE 0.004
   cycle_time_error_threshold: 0.1
 
 
@@ -72,8 +72,8 @@ arm_controller:
       d: 1
       i: 1
       i_clamp: 1
-    
-  
+
+
 gripper_controller:
   type: position_controllers/JointTrajectoryController
   joints:
