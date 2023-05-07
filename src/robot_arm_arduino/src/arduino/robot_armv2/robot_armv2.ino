@@ -25,12 +25,12 @@
 #define MOTOR7_DIR 18
 #define MOTOR7_STEP 5
 
-#define MOTOR1_MAXSPEED 8000
-#define MOTOR2_MAXSPEED 8000
-#define MOTOR3_MAXSPEED 8000
-#define MOTOR4_MAXSPEED 8000
-#define MOTOR5_MAXSPEED 8000
-#define MOTOR6_MAXSPEED 8000
+#define MOTOR1_MAXSPEED 6000
+#define MOTOR2_MAXSPEED 6000
+#define MOTOR3_MAXSPEED 6000
+#define MOTOR4_MAXSPEED 6000
+#define MOTOR5_MAXSPEED 6000
+#define MOTOR6_MAXSPEED 6000
 #define MOTOR7_MAXSPEED 3000
 
 #define MOTOR1_MAXACCEL 3000
@@ -45,12 +45,12 @@
 #define JOINT3_DEFAULT 87
 
 
-const long MOTOR1_RATIO = (230.0 / 20.0) * 1600.0;
-const long MOTOR2_RATIO = (150.0 / 20.0) * 15.0 * 1600.0;
-const long MOTOR3_RATIO = (150.0 / 20.0) * 15.0 * 1600.0;
-const long MOTOR4_RATIO = (100.0 / 20.0) * 11.0 * 1600.0;
-const long MOTOR5_RATIO = (100.0 / 20.0) * 11.0 * 1600.0;
-const long MOTOR6_RATIO = (100.0 / 20.0) * 11.0 * 1600.0;
+const long MOTOR1_RATIO = (230.0 / 20.0) * 800.0;
+const long MOTOR2_RATIO = (150.0 / 20.0) * 15.0 * 800.0;
+const long MOTOR3_RATIO = (150.0 / 20.0) * 15.0 * 800.0;
+const long MOTOR4_RATIO = (100.0 / 20.0) * 11.0 * 800.0;
+const long MOTOR5_RATIO = (100.0 / 20.0) * 11.0 * 800.0;
+const long MOTOR6_RATIO = (100.0 / 20.0) * 11.0 * 800.0;
 const long MOTOR7_RATIO = 15.0 * 400.0;
 
 AccelStepper steppers[6];
@@ -79,27 +79,28 @@ void moveDegrees(int stepper, double degree) {
 }
 
 void setup() {
+  Serial.setRxBufferSize(512);
   Serial.begin(115200);
   // put your setup code here, to run once:
-  steppers[0] = newStepper(MOTOR1_STEP, MOTOR1_DIR, MOTOR1_MAXSPEED, false);
-  steppers[1] = newStepper(MOTOR2_STEP, MOTOR2_DIR, MOTOR2_MAXSPEED, true);
-  steppers[2] = newStepper(MOTOR3_STEP, MOTOR3_DIR, MOTOR3_MAXSPEED, false);
-  steppers[3] = newStepper(MOTOR4_STEP, MOTOR4_DIR, MOTOR4_MAXSPEED, false);
+  steppers[0] = newStepper(MOTOR1_STEP, MOTOR1_DIR, MOTOR1_MAXSPEED, true);
+  steppers[1] = newStepper(MOTOR2_STEP, MOTOR2_DIR, MOTOR2_MAXSPEED, false);
+  steppers[2] = newStepper(MOTOR3_STEP, MOTOR3_DIR, MOTOR3_MAXSPEED, true);
+  steppers[3] = newStepper(MOTOR4_STEP, MOTOR4_DIR, MOTOR4_MAXSPEED, true);
   steppers[4] = newStepper(MOTOR5_STEP, MOTOR5_DIR, MOTOR5_MAXSPEED, false);
   steppers[5] = newStepper(MOTOR6_STEP, MOTOR6_DIR, MOTOR6_MAXSPEED, false);
 
-  gripper = newStepper(MOTOR7_STEP, MOTOR7_DIR, MOTOR7_MAXSPEED, true);
+  gripper = newStepper(MOTOR7_STEP, MOTOR7_DIR, MOTOR7_MAXSPEED, false);
 
   initPos();
 }
 
 
 void initPos(){
-  moveDegrees(1, JOINT2_DEFAULT);
-  moveDegrees(2, JOINT3_DEFAULT);
-  move();
-  steppers[1].setCurrentPosition(JOINT2_DEFAULT);
-  steppers[2].setCurrentPosition(JOINT3_DEFAULT);
+  moveDegrees(1, -(JOINT2_DEFAULT));
+  moveDegrees(2, -(JOINT3_DEFAULT));
+  // // move();
+  steppers[1].setCurrentPosition(steppersPos[1]);
+  steppers[2].setCurrentPosition(steppersPos[2]);
 
 }
 
@@ -130,34 +131,34 @@ void move(){
           longestTimeAtSpeed = travelTime;
         }
 
-        Serial.print("currentPosition( ");
-        Serial.println(steppers[i].currentPosition());
-        Serial.print("distance ");
-        Serial.println(distance);
+        // Serial.print("currentPosition( ");
+        // Serial.println(steppers[i].currentPosition());
+        // Serial.print("distance ");
+        // Serial.println(distance);
 
-        Serial.print("accelTime ");
-        Serial.println(accelTime);
+        // Serial.print("accelTime ");
+        // Serial.println(accelTime);
 
-        Serial.print("accelDist ");
-        Serial.println(accelDist);
+        // Serial.print("accelDist ");
+        // Serial.println(accelDist);
 
-        Serial.print("speedDist ");
-        Serial.println(speedDist);
+        // Serial.print("speedDist ");
+        // Serial.println(speedDist);
 
-        Serial.print("travelTime ");
-        Serial.println(travelTime);
+        // Serial.print("travelTime ");
+        // Serial.println(travelTime);
 
-        Serial.print("totalTime ");
-        Serial.println(totalTime);
+        // Serial.print("totalTime ");
+        // Serial.println(totalTime);
 
-        Serial.print("longestTime ");
-        Serial.println(longestTime);
-        Serial.print("distanceRatio ");
-        Serial.println(distanceRatio);
+        // Serial.print("longestTime ");
+        // Serial.println(longestTime);
+        // Serial.print("distanceRatio ");
+        // Serial.println(distanceRatio);
 
-        Serial.print("longestTimeAtSpeed ");
-        Serial.println(longestTimeAtSpeed);
-        Serial.println("");
+        // Serial.print("longestTimeAtSpeed ");
+        // Serial.println(longestTimeAtSpeed);
+        // Serial.println("");
       } else {
         tempDistance[i] = 0;
       }
@@ -177,19 +178,19 @@ void move(){
         steppers[i].setSpeed(travelSpeed);
         steppers[i].setAcceleration(accel);
         steppers[i].moveTo(steppersPos[i]);
-        Serial.print("Stepper ");
-        Serial.print(i);
-        Serial.print(" Speed ");
-        Serial.print(travelSpeed);
-        Serial.print(" Accel ");
-        Serial.print(accel);
-        Serial.print("Move TO ");
-        Serial.print(steppersPos[i]);
-        Serial.print("Current pos ");
-        Serial.print(steppers[i].currentPosition());
-        Serial.print("Dist to go ");
-        Serial.print(steppers[i].distanceToGo());
-        Serial.println("");
+        // Serial.print("Stepper ");
+        // Serial.print(i);
+        // Serial.print(" Speed ");
+        // Serial.print(travelSpeed);
+        // Serial.print(" Accel ");
+        // Serial.print(accel);
+        // Serial.print("Move TO ");
+        // Serial.print(steppersPos[i]);
+        // Serial.print("Current pos ");
+        // Serial.print(steppers[i].currentPosition());
+        // Serial.print("Dist to go ");
+        // Serial.print(steppers[i].distanceToGo());
+        // Serial.println("");
       } else {
         steppers[i].setSpeed(0);
         steppers[i].setAcceleration(0);
@@ -215,13 +216,13 @@ void move(){
     gripper.setSpeed(MOTOR7_MAXSPEED);
     gripper.setAcceleration(MOTOR7_MAXACCEL);
 
-    if (steppersPos[6] > 1700){
-      steppersPos[6] = 1700;
-    }
+    // if (steppersPos[6] > 1700){
+    //   steppersPos[6] = 1700;
+    // }
 
-    if (steppersPos[6] < 0){
-      steppersPos[6] = 0;
-    }
+    // if (steppersPos[6] < 0){
+    //   steppersPos[6] = 0;
+    // }
 
     gripper.moveTo(steppersPos[6]);
     while (gripper.distanceToGo() != 0){
@@ -245,10 +246,8 @@ void loop() {
 }
 int readCommand() {
   if (Serial.available()) {
-
-
+  
     String command = Serial.readStringUntil('\n');
-
     if (command == "INIT"){
       Serial.println(-(JOINT2_DEFAULT));
       moveDegrees(0,0);
@@ -267,6 +266,17 @@ int readCommand() {
       moveDegrees(4,0);
       moveDegrees(5,0);
       moveDegrees(6,0);
+      return 1;
+    } else if (command.indexOf("GR") >=0){
+      int index = command.indexOf("GR");
+      double degree = command.substring(index+2).toDouble();
+      steppersPos[6] = degree;
+      return 1;
+    } else if (command.indexOf("RS") >=0){
+      int index = command.indexOf("RS");
+      double degree = command.substring(index+2).toDouble();
+      steppersPos[6] = degree;
+      gripper.setCurrentPosition(degree);
       return 1;
     } else {
       int index = command.indexOf(',');
@@ -306,10 +316,10 @@ int readCommand() {
       moveDegrees(5, degree);
                 
 
-      degree = command.toDouble();
-      Serial.println(degree);
-      moveDegrees(6, degree);
-
+      // degree = command.toDouble();
+      // Serial.println(degree);
+      // // moveDegrees(6, degree);
+      // steppersPos[6] = degree;
       return 1;
     }
 
