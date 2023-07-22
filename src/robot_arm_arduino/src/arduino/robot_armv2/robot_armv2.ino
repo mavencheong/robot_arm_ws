@@ -1,5 +1,7 @@
 
 #include <AccelStepper.h>
+#include <MultiStepper.h>
+#include "Queue.h"
 
 #define MOTOR1_DIR 12
 #define MOTOR1_STEP 13
@@ -25,12 +27,12 @@
 #define MOTOR7_DIR 18
 #define MOTOR7_STEP 5
 
-#define MOTOR1_MAXSPEED 6000
-#define MOTOR2_MAXSPEED 6000
-#define MOTOR3_MAXSPEED 6000
-#define MOTOR4_MAXSPEED 6000
-#define MOTOR5_MAXSPEED 6000
-#define MOTOR6_MAXSPEED 6000
+#define MOTOR1_MAXSPEED 1000
+#define MOTOR2_MAXSPEED 1000
+#define MOTOR3_MAXSPEED 1000
+#define MOTOR4_MAXSPEED 1000
+#define MOTOR5_MAXSPEED 1000
+#define MOTOR6_MAXSPEED 1000
 #define MOTOR7_MAXSPEED 3000
 
 #define MOTOR1_MAXACCEL 3000
@@ -55,12 +57,13 @@ const long MOTOR7_RATIO = 15.0 * 400.0;
 
 AccelStepper steppers[6];
 long stepperFullTurn[7] = { MOTOR1_RATIO, MOTOR2_RATIO, MOTOR3_RATIO, MOTOR4_RATIO, MOTOR5_RATIO, MOTOR6_RATIO, MOTOR7_RATIO };
-long steppersPos[7] = { 0, 0, 0, 0, 0, 0,0 };
+long steppersPos[7] = { 0, 0, 0, 0, 0, 0, 0 };
 long stepperSpeed[6] = { MOTOR1_MAXSPEED, MOTOR2_MAXSPEED, MOTOR3_MAXSPEED, MOTOR4_MAXSPEED, MOTOR5_MAXSPEED, MOTOR6_MAXSPEED };
 long stepperAccel[6] = { MOTOR1_MAXACCEL, MOTOR2_MAXACCEL, MOTOR3_MAXACCEL, MOTOR4_MAXACCEL, MOTOR5_MAXACCEL, MOTOR6_MAXACCEL };
 long tempDistance[6] = { 0, 0, 0, 0, 0, 0 };
 
 AccelStepper gripper;
+MultiStepper multiStepper;
 
 
 AccelStepper newStepper(int stepPin, int dirPin, int maxSpeed, bool inverted) {
@@ -73,7 +76,7 @@ AccelStepper newStepper(int stepPin, int dirPin, int maxSpeed, bool inverted) {
 }
 
 void moveDegrees(int stepper, double degree) {
-  double steps = stepperFullTurn[stepper] * degree / 360;
+  double steps = stepperFullTurn[stepper] * degree / 360.0;
 
   steppersPos[stepper] = long(steps);
 }
@@ -91,198 +94,239 @@ void setup() {
 
   gripper = newStepper(MOTOR7_STEP, MOTOR7_DIR, MOTOR7_MAXSPEED, false);
 
+  multiStepper.addStepper(steppers[0]);
+  multiStepper.addStepper(steppers[1]);
+  multiStepper.addStepper(steppers[2]);
+  multiStepper.addStepper(steppers[3]);
+  multiStepper.addStepper(steppers[4]);
+  multiStepper.addStepper(steppers[5]);
+
   initPos();
 }
 
 
-void initPos(){
+void resetSpeed(int speed) {
+  for (int index = 0; index < 6; index++) {
+    steppers[index].setMaxSpeed(speed);
+    stepperSpeed[index] = speed;
+  }
+}
+
+
+void initPos() {
   moveDegrees(1, -(JOINT2_DEFAULT));
   moveDegrees(2, -(JOINT3_DEFAULT));
   // // move();
   steppers[1].setCurrentPosition(steppersPos[1]);
   steppers[2].setCurrentPosition(steppersPos[2]);
-
 }
 
 
 float distanceRatio = 0.0;
 float longestTime = 0.0;
 float longestTimeAtSpeed = 0;
+int moveType = 0;
+int process = 0;
 
-void move(){
+void move() {
   for (int i = 0; i < 6; i++) {
-      float distance = abs(steppersPos[i] - steppers[i].currentPosition());
+    float distance = abs(steppersPos[i] - steppers[i].currentPosition());
 
 
-      if (distance != 0) {
-        float accelTime = float(stepperSpeed[i]) / float(stepperAccel[i]);
-        float accelDist = 0.5 * float(stepperAccel[i]) * pow(accelTime, 2);
-        float speedDist = distance - (2 * accelDist);
+    if (distance != 0) {
+      float accelTime = float(stepperSpeed[i]) / float(stepperAccel[i]);
+      float accelDist = 0.5 * float(stepperAccel[i]) * pow(accelTime, 2);
+      float speedDist = distance - (2 * accelDist);
 
-        float travelTime = speedDist / float(stepperSpeed[i]);
+      float travelTime = speedDist / float(stepperSpeed[i]);
 
-        float totalTime = (accelTime * 2) + travelTime;
+      float totalTime = (accelTime * 2) + travelTime;
 
-        tempDistance[i] = distance;
+      tempDistance[i] = distance;
 
-        if (distance != 0 && totalTime > longestTime) {
-          longestTime = totalTime;
-          distanceRatio = speedDist / distance;
-          longestTimeAtSpeed = travelTime;
-        }
-
-        // Serial.print("currentPosition( ");
-        // Serial.println(steppers[i].currentPosition());
-        // Serial.print("distance ");
-        // Serial.println(distance);
-
-        // Serial.print("accelTime ");
-        // Serial.println(accelTime);
-
-        // Serial.print("accelDist ");
-        // Serial.println(accelDist);
-
-        // Serial.print("speedDist ");
-        // Serial.println(speedDist);
-
-        // Serial.print("travelTime ");
-        // Serial.println(travelTime);
-
-        // Serial.print("totalTime ");
-        // Serial.println(totalTime);
-
-        // Serial.print("longestTime ");
-        // Serial.println(longestTime);
-        // Serial.print("distanceRatio ");
-        // Serial.println(distanceRatio);
-
-        // Serial.print("longestTimeAtSpeed ");
-        // Serial.println(longestTimeAtSpeed);
-        // Serial.println("");
-      } else {
-        tempDistance[i] = 0;
+      if (distance != 0 && totalTime > longestTime) {
+        longestTime = totalTime;
+        distanceRatio = speedDist / distance;
+        longestTimeAtSpeed = travelTime;
       }
-      ///D = v*t + 1/2*a*t^2
+
+      // Serial.print("currentPosition( ");
+      // Serial.println(steppers[i].currentPosition());
+      // Serial.print("distance ");
+      // Serial.println(distance);
+
+      // Serial.print("accelTime ");
+      // Serial.println(accelTime);
+
+      // Serial.print("accelDist ");
+      // Serial.println(accelDist);
+
+      // Serial.print("speedDist ");
+      // Serial.println(speedDist);
+
+      // Serial.print("travelTime ");
+      // Serial.println(travelTime);
+
+      // Serial.print("totalTime ");
+      // Serial.println(totalTime);
+
+      // Serial.print("longestTime ");
+      // Serial.println(longestTime);
+      // Serial.print("distanceRatio ");
+      // Serial.println(distanceRatio);
+
+      // Serial.print("longestTimeAtSpeed ");
+      // Serial.println(longestTimeAtSpeed);
+      // Serial.println("");
+    } else {
+      tempDistance[i] = 0;
+    }
+    ///D = v*t + 1/2*a*t^2
+  }
+
+
+  for (int i = 0; i < 6; i++) {
+
+    if (tempDistance[i] != 0) {
+      long distanceAtSpeed = tempDistance[i] * distanceRatio;
+      float travelSpeed = distanceAtSpeed / longestTimeAtSpeed;
+
+      float timeForAccel = (longestTime - longestTimeAtSpeed) / 2;
+      float accel = travelSpeed / timeForAccel;
+
+      steppers[i].setSpeed(travelSpeed);
+      steppers[i].setAcceleration(accel);
+      steppers[i].moveTo(steppersPos[i]);
+      // Serial.print("Stepper ");
+      // Serial.print(i);
+      // Serial.print(" Speed ");
+      // Serial.print(travelSpeed);
+      // Serial.print(" Accel ");
+      // Serial.print(accel);
+      // Serial.print("Move TO ");
+      // Serial.print(steppersPos[i]);
+      // Serial.print("Current pos ");
+      // Serial.print(steppers[i].currentPosition());
+      // Serial.print("Dist to go ");
+      // Serial.print(steppers[i].distanceToGo());
+      // Serial.println("");
+    } else {
+      steppers[i].setSpeed(0);
+      steppers[i].setAcceleration(0);
+      steppers[i].moveTo(steppersPos[i]);
     }
 
 
+
+    // if (travelSpeed == 0){
+    //   travelSpeed = stepperSpeed[i];
+    // }
+    // if (accel == 0){
+    //   accel = stepperAccel[i];
+    // }
+  }
+
+  while (steppers[0].distanceToGo() != 0 || steppers[1].distanceToGo() != 0 || steppers[2].distanceToGo() != 0 || steppers[3].distanceToGo() != 0 || steppers[4].distanceToGo() != 0 || steppers[5].distanceToGo() != 0) {
     for (int i = 0; i < 6; i++) {
-
-      if (tempDistance[i] != 0) {
-        long distanceAtSpeed = tempDistance[i] * distanceRatio;
-        float travelSpeed = distanceAtSpeed / longestTimeAtSpeed;
-
-        float timeForAccel = (longestTime - longestTimeAtSpeed) / 2;
-        float accel = travelSpeed / timeForAccel;
-
-        steppers[i].setSpeed(travelSpeed);
-        steppers[i].setAcceleration(accel);
-        steppers[i].moveTo(steppersPos[i]);
-        // Serial.print("Stepper ");
-        // Serial.print(i);
-        // Serial.print(" Speed ");
-        // Serial.print(travelSpeed);
-        // Serial.print(" Accel ");
-        // Serial.print(accel);
-        // Serial.print("Move TO ");
-        // Serial.print(steppersPos[i]);
-        // Serial.print("Current pos ");
-        // Serial.print(steppers[i].currentPosition());
-        // Serial.print("Dist to go ");
-        // Serial.print(steppers[i].distanceToGo());
-        // Serial.println("");
-      } else {
-        steppers[i].setSpeed(0);
-        steppers[i].setAcceleration(0);
-        steppers[i].moveTo(steppersPos[i]);        
-      }
-
-
-
-      // if (travelSpeed == 0){
-      //   travelSpeed = stepperSpeed[i];
-      // }
-      // if (accel == 0){
-      //   accel = stepperAccel[i];
-      // }
+      steppers[i].run();
     }
+  }
 
-    while (steppers[0].distanceToGo() != 0 || steppers[1].distanceToGo() != 0 || steppers[2].distanceToGo() != 0 || steppers[3].distanceToGo() != 0 || steppers[4].distanceToGo() != 0 || steppers[5].distanceToGo() != 0) {
-      for (int i = 0; i < 6; i++) {
-        steppers[i].run();
-      }
-    }
+  gripper.setSpeed(MOTOR7_MAXSPEED);
+  gripper.setAcceleration(MOTOR7_MAXACCEL);
 
-    gripper.setSpeed(MOTOR7_MAXSPEED);
-    gripper.setAcceleration(MOTOR7_MAXACCEL);
+  // if (steppersPos[6] > 1700){
+  //   steppersPos[6] = 1700;
+  // }
 
-    // if (steppersPos[6] > 1700){
-    //   steppersPos[6] = 1700;
-    // }
+  // if (steppersPos[6] < 0){
+  //   steppersPos[6] = 0;
+  // }
 
-    // if (steppersPos[6] < 0){
-    //   steppersPos[6] = 0;
-    // }
-
-    gripper.moveTo(steppersPos[6]);
-    while (gripper.distanceToGo() != 0){
-      gripper.run();
-    }
+  gripper.moveTo(steppersPos[6]);
+  while (gripper.distanceToGo() != 0) {
+    gripper.run();
+  }
 }
 
+void moveNoAccel() {
+  multiStepper.moveTo(steppersPos);
+  multiStepper.runSpeedToPosition();
+}
 
 void loop() {
   // put your main code here, to run repeatedly:
   if (readCommand() == 1) {
-    
-
-    
-    move();
-
-    
-    
-    Serial.println("DONE");
   }
 }
+
+Queue<String> queue(255);
+
 int readCommand() {
-  if (Serial.available()) {
-  
+
+  if (Serial.available() > 0) {
     String command = Serial.readStringUntil('\n');
-    if (command == "INIT"){
-      Serial.println(-(JOINT2_DEFAULT));
-      moveDegrees(0,0);
-      moveDegrees(1,-(JOINT2_DEFAULT));
-      moveDegrees(2,-(JOINT3_DEFAULT));
-      moveDegrees(3,0);
-      moveDegrees(4,0);
-      moveDegrees(5,0);
-      moveDegrees(6,0);
+    if (command == "INIT") {
+      moveDegrees(0, 0);
+      moveDegrees(1, -(JOINT2_DEFAULT));
+      moveDegrees(2, -(JOINT3_DEFAULT));
+      moveDegrees(3, 0);
+      moveDegrees(4, 0);
+      moveDegrees(5, 0);
+      move();
+      Serial.println();
       return 1;
     } else if (command == "HOME") {
-      moveDegrees(0,0);
-      moveDegrees(1,0);
-      moveDegrees(2,0);
-      moveDegrees(3,0);
-      moveDegrees(4,0);
-      moveDegrees(5,0);
-      moveDegrees(6,0);
+      moveDegrees(0, 0);
+      moveDegrees(1, 0);
+      moveDegrees(2, 0);
+      moveDegrees(3, 0);
+      moveDegrees(4, 0);
+      moveDegrees(5, 0);
+      Serial.println();
+      move();
+
+
       return 1;
-    } else if (command.indexOf("GR") >=0){
+    } else if (command.indexOf("GR") >= 0) {
       int index = command.indexOf("GR");
-      double degree = command.substring(index+2).toDouble();
+      double degree = command.substring(index + 2).toDouble();
       steppersPos[6] = degree;
+      Serial.println();
+      move();
+
       return 1;
-    } else if (command.indexOf("RS") >=0){
+
+    } else if (command.indexOf("SP") >= 0) {
+      int index = command.indexOf("SP");
+      double speed = command.substring(index + 2).toDouble();
+      resetSpeed(speed);
+      Serial.println();
+      return 1;
+
+    } else if (command.indexOf("RS") >= 0) {
       int index = command.indexOf("RS");
-      double degree = command.substring(index+2).toDouble();
+      double degree = command.substring(index + 2).toDouble();
       steppersPos[6] = degree;
       gripper.setCurrentPosition(degree);
+      Serial.println();
+      move();
+
       return 1;
-    } else {
-      int index = command.indexOf(',');
+    } else if (command.indexOf("MN") >= 0 || command.indexOf("MV") >= 0) {
+      int index = 0;
+      if (command.indexOf("MN") >= 0) {
+        moveType = 1;
+      } else {
+        moveType = 0;
+      }
+
+      command = command.substring(index + 2);
+
+      index = command.indexOf(',');
       double degree = command.substring(0, index).toDouble();
       command = command.substring(index + 1);
-      moveDegrees(0,degree);
+      moveDegrees(0, degree);
 
       index = command.indexOf(',');
       degree = command.substring(0, index).toDouble();
@@ -293,7 +337,7 @@ int readCommand() {
       index = command.indexOf(',');
       degree = command.substring(0, index).toDouble();
       command = command.substring(index + 1);
-      moveDegrees(2,degree);
+      moveDegrees(2, degree);
 
 
       index = command.indexOf(',');
@@ -314,16 +358,23 @@ int readCommand() {
       command = command.substring(index + 1);
       // Serial.println(degree);
       moveDegrees(5, degree);
-                
 
-      // degree = command.toDouble();
-      // Serial.println(degree);
-      // // moveDegrees(6, degree);
-      // steppersPos[6] = degree;
+      int speed = command.toInt();
+      resetSpeed(speed);
+
+     Serial.println();
+      if (moveType == 1) {
+        moveNoAccel();
+      } else {
+        move();
+      }
+
+      
+      
       return 1;
+    } else {
+      Serial.println();
     }
-
-    
   }
 
   return 0;

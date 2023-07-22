@@ -932,8 +932,16 @@ void loop() {
   // encoder2->tick();
 }
 
+Queue<String> queue(1024);
 void readCommand() {
-  if (Serial.available()) {
+  while (Serial.available()){
+    String command = Serial.readStringUntil('\n');
+    queue.push(const RobotArmCmd &item)
+  } 
+
+  
+
+  if (queue.count() > 0) {
 
     robot_arm_hardware::RobotArmCmd cmd = robot_arm_hardware::RobotArmCmd();
 

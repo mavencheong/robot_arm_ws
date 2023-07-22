@@ -1,0 +1,66 @@
+[
+    {
+        "id": "5100a98a-aeb4-40e2-82ab-d14ad3e559f1",
+        "type": "joint",
+        "axis1": -1.3972,
+        "axis2": -19.588,
+        "axis3": -40.5564,
+        "axis4": -0.0,
+        "axis5": -69.0316,
+        "axis6": -1.3972,
+        "initSpeed": 0.0,
+        "finalSpeed": 0.0
+    },
+    {
+        "id": "efdadf7b-4978-4354-abff-8f3726ac9ad5",
+        "type": "vision_capture"
+    },
+    {
+        "id": "672fc741-d55d-411b-8cee-cdd93a469674",
+        "type": "vision_moveto_xy"
+    },
+    {
+        "id": "41136250-09fe-4f8f-b8aa-29ced0c31ef7",
+        "type": "gripper",
+        "steps": 1800.0
+    },
+    {
+        "id": "6d6e174f-80aa-41f5-9471-5ab31d99c430",
+        "type": "vision_moveto_z"
+    },
+    {
+        "id": "14a604e8-356b-45cf-a974-5ad1a73e65a7",
+        "type": "vision_gripper_close"
+    },
+    {
+        "id": "db189092-5cf0-4786-9eb2-478101cffdac",
+        "type": "vision_moveback_z",
+        "moveBackMM": 100.0
+    },
+    {
+        "id": "3085bb14-9ab0-4c16-ad7d-1d04a9f0ba1b",
+        "type": "joint",
+        "axis1": -66.3788,
+        "axis2": 16.4704,
+        "axis3": 32.207,
+        "axis4": -1.2331,
+        "axis5": -102.9846,
+        "axis6": -66.6848,
+        "initSpeed": 0.0,
+        "finalSpeed": 0.0
+    },
+    {
+        "id": "41136250-09fe-4f8f-b8aa-29ced0c31ef7",
+        "type": "gripper",
+        "steps": 1800.0
+    },
+    {
+        "id": "6f7fd2aa-ad30-4abf-b301-d4371d5c4e4b",
+        "type": "gripper",
+        "steps": 0.0
+    },
+    {
+        "id": "e2faa9e4-9103-463d-a534-01802a629b51",
+        "type": "vision_loop_object"
+    }
+]
