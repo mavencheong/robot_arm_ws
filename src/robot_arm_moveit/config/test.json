@@ -1,0 +1,98 @@
+[
+    {
+        "id": "4f3411b8-fa29-48fb-bb25-2293f06d5bdb",
+        "type": "joint",
+        "axis1": 0.0,
+        "axis2": 0.0,
+        "axis3": 0.0,
+        "axis4": 0.0,
+        "axis5": 0.0,
+        "axis6": 0.0,
+        "initSpeed": 0.0,
+        "finalSpeed": 0.0
+    },
+    {
+        "id": "c44ee72d-4460-4099-8f06-bbca2d1950bd",
+        "type": "joint",
+        "axis1": 0.0,
+        "axis2": 28.1394,
+        "axis3": -51.4888,
+        "axis4": 0.0,
+        "axis5": 79.6282,
+        "axis6": -0.0,
+        "initSpeed": 0.0,
+        "finalSpeed": 0.0
+    },
+    {
+        "id": "5a015470-1fdc-4711-baa6-166dc5bb6585",
+        "type": "joint",
+        "axis1": -0.0,
+        "axis2": 39.7968,
+        "axis3": -28.6207,
+        "axis4": -0.0,
+        "axis5": 68.4175,
+        "axis6": -0.0,
+        "initSpeed": 0.0,
+        "finalSpeed": 0.0
+    },
+    {
+        "id": "b3ea78e9-d931-4cd4-9b93-fea5f991e7c7",
+        "type": "joint",
+        "axis1": 0.0,
+        "axis2": 28.0841,
+        "axis3": -51.5967,
+        "axis4": 0.0,
+        "axis5": 79.6807,
+        "axis6": -0.0,
+        "initSpeed": 0.0,
+        "finalSpeed": 0.0
+    },
+    {
+        "id": "fe5d4918-7974-4eb9-b3e3-8d69163167ee",
+        "type": "joint",
+        "axis1": -0.0,
+        "axis2": 0.2112,
+        "axis3": -38.0686,
+        "axis4": 0.0,
+        "axis5": 38.2798,
+        "axis6": -0.0,
+        "initSpeed": 0.0,
+        "finalSpeed": 0.0
+    },
+    {
+        "id": "fd60f574-847b-4c3a-b31b-fd9e70260434",
+        "type": "joint",
+        "axis1": 0.0,
+        "axis2": 18.7079,
+        "axis3": -16.4553,
+        "axis4": 0.0,
+        "axis5": 35.1632,
+        "axis6": -0.0,
+        "initSpeed": 0.0,
+        "finalSpeed": 0.0
+    },
+    {
+        "id": "944ea2bd-8085-4470-9831-c81ad8bb49d4",
+        "type": "joint",
+        "axis1": -0.0,
+        "axis2": 0.2112,
+        "axis3": -38.0686,
+        "axis4": 0.0,
+        "axis5": 38.2798,
+        "axis6": -0.0,
+        "initSpeed": 0.0,
+        "finalSpeed": 0.0
+    },
+    {
+        "id": "c5e19dde-f316-4406-a116-204ce2d8ea74",
+        "type": "joint",
+        "axis1": 0.0,
+        "axis2": 0.0,
+        "axis3": 0.0,
+        "axis4": 0.0,
+        "axis5": 0.0,
+        "axis6": 0.0,
+        "initSpeed": 0.0,
+        "finalSpeed": 0.0
+    }
+]

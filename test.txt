@@ -1,0 +1,71 @@
+void MultiStepper::move()
+{
+  // Calculate the acceleration rate
+  float acceleration = (float)(_maxSpeed - _minSpeed) / (_maxAccelerationSteps - _minAccelerationSteps);
+
+  // Find the motor with the longest distance to travel
+  long maxSteps = 0;
+  for (uint8_t i = 0; i < _numSteppers; i++)
+  {
+    Stepper *stepper = _steppers[i];
+    long stepsLeft = stepper->distanceToGo();
+    if (stepsLeft > maxSteps)
+    {
+      maxSteps = stepsLeft;
+    }
+  }
+
+  // Loop through all the stepper motors
+  for (uint8_t i = 0; i < _numSteppers; i++)
+  {
+    Stepper *stepper = _steppers[i];
+    long stepsLeft = stepper->distanceToGo();
+
+    if (stepsLeft == 0)
+    {
+      continue;
+    }
+
+    // Calculate the current acceleration steps
+    float currentAccelerationSteps = _minAccelerationSteps + (float)(_accelerationSteps[i] * acceleration);
+
+    // Calculate the current speed
+    float currentSpeed = stepper->speed();
+
+    if (currentSpeed == 0)
+    {
+      // If the motor is stationary, set the speed to the minimum speed
+      currentSpeed = _minSpeed;
+    }
+    else if (stepsLeft < currentAccelerationSteps)
+    {
+      // If the remaining steps are less than the current acceleration steps,
+      // gradually decrease the speed
+      currentSpeed -= _acceleration[i];
+      if (currentSpeed < _minSpeed)
+      {
+        currentSpeed = _minSpeed;
+      }
+    }
+    else if (currentSpeed < _maxSpeed)
+    {
+      // If the current speed is less than the maximum speed, gradually increase the speed
+      currentSpeed += _acceleration[i];
+      if (currentSpeed > _maxSpeed)
+      {
+        currentSpeed = _maxSpeed;
+      }
+    }
+
+    // Adjust the speed of the fastest motor to match the slowest motor
+    float speedRatio = (float)maxSteps / (float)stepsLeft;
+    if (speedRatio != 1)
+    {
+      currentSpeed *= speedRatio;
+    }
+
+    // Move the motor by the calculated amount
+    stepper->setSpeed(currentSpeed);
+    stepper->step(stepper->distanceToGo() > 0 ? currentAccelerationSteps : -currentAccelerationSteps);
+  }
+}

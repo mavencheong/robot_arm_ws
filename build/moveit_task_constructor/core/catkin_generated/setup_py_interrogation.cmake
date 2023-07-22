@@ -1,0 +1,7 @@
+set(moveit_task_constructor_core_SETUP_PY_SETUP_MODULE "setuptools")
+set(moveit_task_constructor_core_SETUP_PY_VERSION "0.1.3")
+set(moveit_task_constructor_core_SETUP_PY_SCRIPTS "")
+set(moveit_task_constructor_core_SETUP_PY_PACKAGES "moveit")
+set(moveit_task_constructor_core_SETUP_PY_PACKAGE_DIRS "python/src/moveit")
+set(moveit_task_constructor_core_SETUP_PY_MODULES "")
+set(moveit_task_constructor_core_SETUP_PY_MODULE_DIRS "")
