@@ -1,8 +1,0 @@
-prefix=/home/maven/robot_arm_ws/install
-
-Name: rviz_marker_tools
-Description: Description of rviz_marker_tools
-Version: 0.1.3
-Cflags: -I${prefix}/include
-Libs: -L${prefix}/lib -lrviz_marker_tools
-Requires: geometry_msgs visualization_msgs roscpp rviz
