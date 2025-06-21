@@ -78,7 +78,6 @@ def on_message(client, userdata, msg):
             }
         }
 
-        client.publish(topic_pub, json.dumps(data))
     elif payload["move"] == "ik":
 
         # Desired end effector position (in meters)
@@ -108,6 +107,7 @@ def on_message(client, userdata, msg):
             }
         }
 
+    print ("Public 111")
     client.publish(topic_pub, json.dumps(data))
 
 
@@ -122,4 +122,4 @@ app = Flask(__name__)
 
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5000)
+    app.run(debug=False, port=5000, use_reloader=False)

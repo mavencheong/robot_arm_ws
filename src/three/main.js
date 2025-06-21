@@ -5,6 +5,16 @@ import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js';
 import URDFLoader from 'urdf-loader';
 import mqtt from 'mqtt';
 
+
+const options = {
+  connectTimeout: 4000,
+  clientId: 'threejs_client_' + Math.random().toString(16).substr(2, 8),
+  keepalive: 60,
+  clean: true,
+};
+
+
+const mqttClient = mqtt.connect('ws://localhost:9001', options); // Port 9001 is default for WebSocket MQTT
 // Scene setup
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x000000);
@@ -157,14 +167,7 @@ loader.load(
   }
 );
 
-const options = {
-  connectTimeout: 4000,
-  clientId: 'threejs_client_' + Math.random().toString(16).substr(2, 8),
-  keepalive: 60,
-  clean: true,
-};
 
-const mqttClient = mqtt.connect('ws://localhost:9001', options); // Port 9001 is default for WebSocket MQTT
 
 mqttClient.on('connect', () => {
   console.log('✅ MQTT Connected');
@@ -179,7 +182,7 @@ mqttClient.on('message', (topic, message) => {
   const data = JSON.parse(message.toString());
   console.log('📥 MQTT Data:', data);
 
-  if (data.joints){
+  if (data?.joints){
 
     moveToJointTargets([
       data.joints.joint_1,
