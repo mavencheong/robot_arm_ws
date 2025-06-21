@@ -1,5 +1,21 @@
 #include <AccelStepper.h>
 #include <math.h>
+#include <WiFi.h>           // For ESP32 or ESP8266. Use <ESP8266WiFi.h> if ESP8266
+#include <PubSubClient.h>   // MQTT Client library
+
+const char* ssid = "xxxx";
+const char* password = "xxxx";
+
+const char* mqtt_server = "xxxx"; // e.g., "test.mosquitto.org"
+const int mqtt_port = 1883;
+
+
+const char* subscribe_topic = "command/position";
+const char* publish_topic = "robot/position";
+
+
+WiFiClient espClient;
+PubSubClient client(espClient);
 
 #define MOTOR1_DIR 12
 #define MOTOR1_STEP 13
@@ -29,7 +45,7 @@
 
 
 #define JOINT2_DEFAULT 55.0
-#define JOINT3_DEFAULT 87.0
+#define JOINT3_DEFAULT 93.0
 
 const double dl1 = 360.0 / 200.0 / 8.0 / 11.5;
 const double dl2 = 360.0 / 200.0 / 8.0 / 112.5;
@@ -73,6 +89,8 @@ const double d6 = 27.23;
 
 AccelStepper gripper;
 
+const int LED_PIN = 2; // Built-in LED usually on GPIO 2 for ESP32
+
 
 AccelStepper newStepper(int stepPin, int dirPin, int maxSpeed, bool inverted) {
   AccelStepper stepper = AccelStepper(stepper.DRIVER, stepPin, dirPin);
@@ -81,6 +99,16 @@ AccelStepper newStepper(int stepPin, int dirPin, int maxSpeed, bool inverted) {
   stepper.enableOutputs();
 
   return stepper;
+}
+
+
+void blinkLED(int times, int delayTime = 200) {
+  for (int i = 0; i < times; i++) {
+    digitalWrite(LED_PIN, HIGH);
+    delay(delayTime);
+    digitalWrite(LED_PIN, LOW);
+    delay(delayTime);
+  }
 }
 
 
@@ -97,6 +125,13 @@ void setInitFinalSpeed(float init, float final) {
 
 void setup() {
   Serial.begin(115200);
+  pinMode(LED_PIN, OUTPUT);
+
+  setup_wifi();
+
+  client.setServer(mqtt_server, mqtt_port);
+  client.setCallback(callback);
+
   // put your setup code here, to run once:
   // pinMode(MOTOR_DIR, OUTPUT);
   // pinMode(MOTOR_STEP, OUTPUT);
@@ -140,6 +175,52 @@ void setup() {
 }
 
 
+void setup_wifi() {
+  delay(10);
+  Serial.println();
+  Serial.print("Connecting to ");
+  Serial.println(ssid);
+
+  WiFi.begin(ssid, password);
+
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+
+  Serial.println("");
+  Serial.println("WiFi connected");
+  Serial.print("IP address: ");
+  Serial.println(WiFi.localIP());
+
+   blinkLED(2);
+}
+
+
+void reconnect() {
+  // Loop until we're reconnected
+  while (!client.connected()) {
+    Serial.print("Attempting MQTT connection...");
+    // Attempt to connect
+    if (client.connect("ArduinoClient")) {
+      Serial.println("connected");
+      // Once connected, subscribe
+      client.subscribe(subscribe_topic);
+
+      blinkLED(3);
+    } else {
+      Serial.print("failed, rc=");
+      Serial.print(client.state());
+      Serial.println(" try again in 5 seconds");
+      // Wait 5 seconds before retrying
+      delay(5000);
+    }
+  }
+}
+
+
+
+
 void move() {
   float Jinitial[6] = { curPos1, curPos2, curPos3, curPos4, curPos5, curPos6 };
   float Jfinal[6] = { steppersPos[0], steppersPos[1], steppersPos[2], steppersPos[3], steppersPos[4], steppersPos[5] };
@@ -155,8 +236,13 @@ void move() {
 
 
 void loop() {
-  if (readCommand() == 1) {
+  // if (readCommand() == 1) {
+  // }
+
+  if (!client.connected()) {
+    reconnect();
   }
+  client.loop();
 
   // delay(5000);
   // steppersPos[0] = 0;
@@ -385,13 +471,13 @@ void goTrajectory(float* Jf) {
   }
   // joint #5
   if (Jf[4] - curPos5 > 0.0) {  // positive direction of rotation
-    digitalWrite(MOTOR5_DIR, HIGH);
+    digitalWrite(MOTOR5_DIR, LOW);
     while (Jf[4] - curPos5 > dl5 / 2.0) {
       if (PULstat5 == 0) {
-        digitalWrite(MOTOR5_STEP, HIGH);
+        digitalWrite(MOTOR5_STEP, LOW);
         PULstat5 = 1;
       } else {
-        digitalWrite(MOTOR5_STEP, LOW);
+        digitalWrite(MOTOR5_STEP, HIGH);
         PULstat5 = 0;
       }
       //curPos5 = Jf[4];
@@ -401,13 +487,13 @@ void goTrajectory(float* Jf) {
       }
     }
   } else {
-    digitalWrite(MOTOR5_DIR, LOW);
+    digitalWrite(MOTOR5_DIR, HIGH);
     while (-Jf[4] + curPos5 > dl5 / 2.0) {
       if (PULstat5 == 0) {
-        digitalWrite(MOTOR5_STEP, HIGH);
+        digitalWrite(MOTOR5_STEP, LOW);
         PULstat5 = 1;
       } else {
-        digitalWrite(MOTOR5_STEP, LOW);
+        digitalWrite(MOTOR5_STEP, HIGH);
         PULstat5 = 0;
       }
       //curPos5 = Jf[4];
@@ -454,10 +540,33 @@ void goTrajectory(float* Jf) {
 }
 
 
-int readCommand() {
+// This function will be called when a message is received
+void callback(char* topic, byte* payload, unsigned int length) {
+  Serial.print("Message arrived on topic: ");
+  Serial.println(topic);
 
-  if (Serial.available() > 0) {
-    String command = Serial.readStringUntil('\n');
+
+  String message;
+  for (unsigned int i = 0; i < length; i++) {
+    message += (char)payload[i];
+  }
+
+  Serial.print("Message: ");
+  Serial.println(message);
+
+  Serial.println();
+
+  readCommand(message);
+}
+
+void publish(String message){
+  client.publish(publish_topic, message.c_str());
+  Serial.println("Message published");
+}
+
+int readCommand(String command) {
+
+  // if (Serial.available() > 0) {
     if (command == "INIT") {
       steppersPos[0] = 0.0;
       steppersPos[1] = -(JOINT2_DEFAULT);
@@ -465,11 +574,12 @@ int readCommand() {
       steppersPos[3] = 0.0;
       steppersPos[4] = 0.0;
       steppersPos[5] = 0.0;
-      Serial.println();
+      
       initSpeed = 0.0;
       finalSpeed = 0.0;
-      move();
+      // move();
 
+      publish("done");
       return 1;
     } else if (command == "HOME") {
       steppersPos[0] = 0.0;
@@ -478,26 +588,25 @@ int readCommand() {
       steppersPos[3] = 0.0;
       steppersPos[4] = 0.0;
       steppersPos[5] = 0.0;
-      Serial.println();
       initSpeed = 0.0;
       finalSpeed = 0.0;
       move();
-
+      publish("done");
       return 1;
     } else if (command.indexOf("GR") >= 0) {
       int index = command.indexOf("GR");
       double degree = command.substring(index + 2).toDouble();
       steppersPos[6] = degree;
-      Serial.println();
       move();
-
+      publish("done");
       return 1;
 
     } else if (command.indexOf("SP") >= 0) {
       int index = command.indexOf("SP");
       float speed = command.substring(index + 2).toFloat();
       resetSpeed(speed);
-      Serial.println();
+      
+      publish("done");
       return 1;
 
     } else if (command.indexOf("RS") >= 0) {
@@ -505,9 +614,8 @@ int readCommand() {
       double degree = command.substring(index + 2).toDouble();
       steppersPos[6] = degree;
       gripper.setCurrentPosition(degree);
-      Serial.println();
       move();
-
+      publish("done");
       return 1;
     } else if (command.indexOf("MN") >= 0 || command.indexOf("MV") >= 0) {
       int index = 0;
@@ -562,9 +670,10 @@ int readCommand() {
 
       setInitFinalSpeed(iSpeed, fSpeed);
 
-      Serial.println();
+      
       move();
 
+      publish("done");
       return 1;
     } else if (command.indexOf("IK") >= 0) {
       int index = 0;
@@ -611,6 +720,8 @@ int readCommand() {
       InverseK(ik, steppersPos);
 
       move();
+
+      publish("done");
     } else if (command.indexOf("FK") >= 0) {
       int index = 0;
 
@@ -668,10 +779,11 @@ int readCommand() {
       Serial.println();
 
       move();
+      publish("done");
     } else {
-      Serial.println();
+      publish("done");
     }
-  }
+  // }
 
   return 0;
 }

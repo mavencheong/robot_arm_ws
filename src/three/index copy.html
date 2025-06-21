@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>URDF Robot in Three.js</title>
+  <style>
+    body { margin: 0; overflow: hidden; }
+    canvas { display: block; }
+    #robot-controls {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  display: flex;
+  gap: 30px;
+  padding: 20px;
+  background: rgba(20, 20, 20, 0.9);
+  color: white;
+  border-radius: 12px;
+  font-family: sans-serif;
+}
+
+.control-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.control-section h3 {
+  margin-bottom: 10px;
+  font-size: 16px;
+  text-align: center;
+}
+
+.joystick .row {
+  display: flex;
+  gap: 5px;
+}
+
+button {
+  width: 40px;
+  height: 40px;
+  font-size: 14px;
+  cursor: pointer;
+  border: none;
+  background-color: #444;
+  color: white;
+  border-radius: 4px;
+}
+
+button:hover:not(:disabled) {
+  background-color: #666;
+}
+
+.axis-buttons div,
+.joint-buttons div {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 5px;
+}
+.state-display {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 14px;
+  background: #222;
+  padding: 10px;
+  border-radius: 8px;
+  width: 140px;
+}
+
+  </style>
+</head>
+<body>
+  
+  <div id="robot-controls">
+  <!-- Joystick Section -->
+  <div class="control-section">
+    <h3>Joystick</h3>
+    <div class="joystick">
+      <div class="row">
+        <button>↖</button>
+        <button>↑</button>
+        <button>↗</button>
+      </div>
+      <div class="row">
+        <button>←</button>
+        <button id="btn-center"  >●</button>
+        <button>→</button>
+      </div>
+      <div class="row">
+        <button>↙</button>
+        <button>↓</button>
+        <button>↘</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- End-Effector Controls -->
+  <div class="control-section">
+    <h3>Move End Effector</h3>
+    <div class="axis-buttons">
+      <div><button>+X</button> <button>-X</button></div>
+      <div><button>+Y</button> <button>-Y</button></div>
+      <div><button>+Z</button> <button>-Z</button></div>
+    </div>
+  </div>
+
+  <!-- Joint Controls -->
+  <div class="control-section">
+    <h3>Joint Control</h3>
+    <div class="joint-buttons">
+      <div>Joint 1: <button>+</button> <button>-</button></div>
+      <div>Joint 2: <button>+</button> <button>-</button></div>
+      <div>Joint 3: <button>+</button> <button>-</button></div>
+      <div>Joint 4: <button>+</button> <button>-</button></div>
+      <div>Joint 5: <button>+</button> <button>-</button></div>
+      <div>Joint 6: <button>+</button> <button>-</button></div>
+    </div>
+  </div>
+
+  <div class="control-section">
+  <h3>Robot State</h3>
+  <div class="state-display">
+    <div><strong>Position:</strong></div>
+    <div>X: <span id="pos-x">0.00</span></div>
+    <div>Y: <span id="pos-y">0.00</span></div>
+    <div>Z: <span id="pos-z">0.00</span></div>
+
+    <div><strong>Orientation:</strong></div>
+    <div>Roll: <span id="ori-roll">0.00</span></div>
+    <div>Pitch: <span id="ori-pitch">0.00</span></div>
+    <div>Yaw: <span id="ori-yaw">0.00</span></div>
+
+    <div><strong>Joint Angles:</strong></div>
+    <div>θ1: <span id="joint-1">0°</span></div>
+    <div>θ2: <span id="joint-2">0°</span></div>
+    <div>θ3: <span id="joint-3">0°</span></div>
+    <div>θ4: <span id="joint-4">0°</span></div>
+    <div>θ5: <span id="joint-5">0°</span></div>
+    <div>θ6: <span id="joint-6">0°</span></div>
+  </div>
+</div>
+</div>
+
+<script type="module" src="main.js" defer></script>
+</body>
+</html>

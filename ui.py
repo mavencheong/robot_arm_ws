@@ -12,10 +12,11 @@ import matplotlib.pyplot as plt
 import uuid
 import threading
 import json
+import paho.mqtt.client as mqtt
+
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import cv2 as cv
 from PIL import Image,ImageTk
-
 
 
 customtkinter.set_appearance_mode("Dark")  # Modes: "System" (standard), "Dark", "Light"
@@ -25,9 +26,20 @@ customtkinter.set_default_color_theme("blue")  # Themes: "blue" (standard), "gre
 class App(customtkinter.CTk):
     def __init__(self):
         super().__init__()
-        
+
+        self.mqtt_broker = "localhost"
+        self.mqtt_port = 1883  # Default MQTT port without TLS
+        self.mqtt_topic_command_position = "command/position"
+        self.mqtt_topic_robot_position  = "robot/position"
+
+        self.mqtt_client = mqtt.Client()
+
+        self.mqtt_client.on_connect = self.on_connect
+        self.mqtt_client.on_message = self.on_message
+        self.robot_ready = True
+
         self.index = 1
-        self.robot_axis_positions = [ 0.0, -55.0, -87.0, 0.0, 0.0, 0.0 ]
+        self.robot_axis_positions = [ 0.0, -55.0, -93.0, 0.0, 0.0, 0.0 ]
         self.current_speed = 30.0
         self.gripper_current_steps = 0.0
         self.gripper_reset_steps = 0.0
@@ -757,6 +769,14 @@ class App(customtkinter.CTk):
         self.show_plot()
         
     
+    def on_connect(self, client, userdata, flags, rc):
+        if rc == 0:
+            print("Connected to MQTT Broker!")
+            client.subscribe(self.mqtt_topic_robot_position)
+        else:
+            print(f"Failed to connect, return code {rc}")
+
+
     def connect_camera(self):
 
         if self.vision_start == False:
@@ -2349,7 +2369,9 @@ class App(customtkinter.CTk):
         
     def connect_robot(self):
         try:
-            self.arduino  = serial.Serial(port=self.port_textbox.get(), baudrate=115200, timeout=None)
+            # self.arduino  = serial.Serial(port=self.port_textbox.get(), baudrate=115200, timeout=None)
+            self.mqtt_client.connect(self.mqtt_broker, self.mqtt_port, 60)
+            self.mqtt_client.loop_start()
             self.connect_status_label.configure(text="CONNECTED")
         except Exception as error:
             self.connect_status_label.configure(text="FAIL TO CONNECT")
@@ -2985,7 +3007,7 @@ class App(customtkinter.CTk):
     def on_init(self):
         self.robot_axis_positions[0] = 0.0
         self.robot_axis_positions[1] = -55.0
-        self.robot_axis_positions[2] = -87.0
+        self.robot_axis_positions[2] = -93.0
         self.robot_axis_positions[3] = 0.0
         self.robot_axis_positions[4] = 0.0
         self.robot_axis_positions[5] = 0.0
@@ -3056,15 +3078,33 @@ class App(customtkinter.CTk):
     def send_join_command_v2(self,a,b,c,d,e,f, initSpeed=0.0, finalSpeed=0.0):
         command = '{}{:.4f},{:.4f},{:.4f},{:.4f},{:.4f},{:.4f},{:.2f},{:.2f}\n'.format("MN",a,b,c,d,e,f,initSpeed, finalSpeed)
         self.send_command(command)
+    
+    def on_message(self, client, userdata, msg):
+        message = msg.payload.decode()
+    
+        if message == "done":
+            self.robot_ready = True
         
+        print(f"Received message: {msg.topic} -> {msg.payload.decode()}")
+
+    
+
         
     def send_command(self, command):
         if self.is_send_to_robot() == True:
-            self.arduino.write(command.encode('ascii'))
+            self.robot_ready = False
+            self.mqtt_client.publish(self.mqtt_topic_command_position, command)
+
             print("Command Send")
             print(command)
-            print(self.arduino.readline())
-            print("Command Read")
+
+            start_time = time.time()
+
+            while self.robot_ready == False:
+                if time.time() - start_time > 20:
+                    print("Time limit exceeded, breaking the loop.")
+                    break
+            print("Robot ready for command")
         
     
     def show_plot(self):

@@ -1,0 +1,11 @@
+{
+  "scripts": {
+    "dev": "vite"
+  },
+  "dependencies": {
+    "mqtt": "^5.13.0",
+    "urdf-loader": "^0.12.5",
+    "vite": "^6.3.5",
+    "ws": "^8.18.2"
+  }
+}
