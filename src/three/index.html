@@ -67,7 +67,7 @@ button:hover:not(:disabled) {
   background: #222;
   padding: 10px;
   border-radius: 8px;
-  width: 140px;
+  width: 150px;
 }
 
   </style>
@@ -114,29 +114,29 @@ button:hover:not(:disabled) {
   <div class="control-section">
     <h3>Joint Control</h3>
     <div class="joint-buttons">
-      <div>Joint 1: <button>+</button> <button>-</button></div>
-      <div>Joint 2: <button>+</button> <button>-</button></div>
-      <div>Joint 3: <button>+</button> <button>-</button></div>
-      <div>Joint 4: <button>+</button> <button>-</button></div>
-      <div>Joint 5: <button>+</button> <button>-</button></div>
-      <div>Joint 6: <button>+</button> <button>-</button></div>
+      <div>Joint 1: <button id="btn-joint1plus">+</button> <button id="btn-joint1minus">-</button></div>
+      <div>Joint 2: <button id="btn-joint2plus">+</button> <button id="btn-joint2minus">-</button></div>
+      <div>Joint 3: <button id="btn-joint3plus">+</button> <button id="btn-joint3minus">-</button></div>
+      <div>Joint 4: <button id="btn-joint4plus">+</button> <button id="btn-joint4minus">-</button></div>
+      <div>Joint 5: <button id="btn-joint5plus">+</button> <button id="btn-joint5minus">-</button></div>
+      <div>Joint 6: <button id="btn-joint6plus">+</button> <button id="btn-joint6minus">-</button></div>
     </div>
   </div>
 
   <div class="control-section">
   <h3>Robot State</h3>
   <div class="state-display">
-    <div><strong>Position:</strong></div>
+    <div><strong>Position (mm):</strong></div>
     <div>X: <span id="pos-x">0.00</span></div>
     <div>Y: <span id="pos-y">0.00</span></div>
     <div>Z: <span id="pos-z">0.00</span></div>
 
-    <div><strong>Orientation:</strong></div>
+    <div><strong>Orientation (degree):</strong></div>
     <div>Roll: <span id="ori-roll">0.00</span></div>
     <div>Pitch: <span id="ori-pitch">0.00</span></div>
     <div>Yaw: <span id="ori-yaw">0.00</span></div>
 
-    <div><strong>Joint Angles:</strong></div>
+    <div><strong>Joint Angles (degree):</strong></div>
     <div>θ1: <span id="joint-1">0°</span></div>
     <div>θ2: <span id="joint-2">0°</span></div>
     <div>θ3: <span id="joint-3">0°</span></div>

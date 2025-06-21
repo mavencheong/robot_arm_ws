@@ -450,7 +450,119 @@ document.getElementById('btn-southwest').addEventListener('click', () => {
   mqttClient.publish('robot/command', JSON.stringify(currentPosition));
 })
 
+document.getElementById('btn-joint1plus').addEventListener('click', () => {
+  let currentPosition = getEndEffectorPositionAndEularAndJointsAngle();
 
+  currentPosition.joints["joint_1"] = currentPosition.joints["joint_1"] + 0.02;
+  currentPosition.move = 'fk';
+
+  mqttClient.publish('robot/command', JSON.stringify(currentPosition));
+})
+
+document.getElementById('btn-joint1minus').addEventListener('click', () => {
+  let currentPosition = getEndEffectorPositionAndEularAndJointsAngle();
+
+  currentPosition.joints["joint_1"] = currentPosition.joints["joint_1"] - 0.02;
+  currentPosition.move = 'fk';
+  
+  mqttClient.publish('robot/command', JSON.stringify(currentPosition));
+})
+
+
+document.getElementById('btn-joint2plus').addEventListener('click', () => {
+  let currentPosition = getEndEffectorPositionAndEularAndJointsAngle();
+
+  currentPosition.joints["joint_2"] = currentPosition.joints["joint_2"] + 0.02;
+  currentPosition.move = 'fk';
+
+  mqttClient.publish('robot/command', JSON.stringify(currentPosition));
+})
+
+document.getElementById('btn-joint2minus').addEventListener('click', () => {
+  let currentPosition = getEndEffectorPositionAndEularAndJointsAngle();
+
+  currentPosition.joints["joint_2"] = currentPosition.joints["joint_2"] - 0.02;
+  currentPosition.move = 'fk';
+  
+  mqttClient.publish('robot/command', JSON.stringify(currentPosition));
+})
+
+
+document.getElementById('btn-joint3plus').addEventListener('click', () => {
+  let currentPosition = getEndEffectorPositionAndEularAndJointsAngle();
+
+  currentPosition.joints["joint_3"] = currentPosition.joints["joint_3"] + 0.02;
+  currentPosition.move = 'fk';
+
+  mqttClient.publish('robot/command', JSON.stringify(currentPosition));
+})
+
+document.getElementById('btn-joint3minus').addEventListener('click', () => {
+  let currentPosition = getEndEffectorPositionAndEularAndJointsAngle();
+
+  currentPosition.joints["joint_3"] = currentPosition.joints["joint_3"] - 0.02;
+  currentPosition.move = 'fk';
+  
+  mqttClient.publish('robot/command', JSON.stringify(currentPosition));
+})
+
+
+document.getElementById('btn-joint4plus').addEventListener('click', () => {
+  let currentPosition = getEndEffectorPositionAndEularAndJointsAngle();
+
+  currentPosition.joints["joint_4"] = currentPosition.joints["joint_4"] + 0.02;
+  currentPosition.move = 'fk';
+
+  mqttClient.publish('robot/command', JSON.stringify(currentPosition));
+})
+
+document.getElementById('btn-joint4minus').addEventListener('click', () => {
+  let currentPosition = getEndEffectorPositionAndEularAndJointsAngle();
+
+  currentPosition.joints["joint_4"] = currentPosition.joints["joint_4"] - 0.02;
+  currentPosition.move = 'fk';
+  
+  mqttClient.publish('robot/command', JSON.stringify(currentPosition));
+})
+
+
+document.getElementById('btn-joint5plus').addEventListener('click', () => {
+  let currentPosition = getEndEffectorPositionAndEularAndJointsAngle();
+
+  currentPosition.joints["joint_5"] = currentPosition.joints["joint_5"] + 0.02;
+  currentPosition.move = 'fk';
+
+  mqttClient.publish('robot/command', JSON.stringify(currentPosition));
+})
+
+document.getElementById('btn-joint5minus').addEventListener('click', () => {
+  let currentPosition = getEndEffectorPositionAndEularAndJointsAngle();
+
+  currentPosition.joints["joint_5"] = currentPosition.joints["joint_5"] - 0.02;
+  currentPosition.move = 'fk';
+  
+  mqttClient.publish('robot/command', JSON.stringify(currentPosition));
+})
+
+
+
+document.getElementById('btn-joint6plus').addEventListener('click', () => {
+  let currentPosition = getEndEffectorPositionAndEularAndJointsAngle();
+
+  currentPosition.joints["joint_6"] = currentPosition.joints["joint_6"] + 0.02;
+  currentPosition.move = 'fk';
+
+  mqttClient.publish('robot/command', JSON.stringify(currentPosition));
+})
+
+document.getElementById('btn-joint6minus').addEventListener('click', () => {
+  let currentPosition = getEndEffectorPositionAndEularAndJointsAngle();
+
+  currentPosition.joints["joint_6"] = currentPosition.joints["joint_6"] - 0.02;
+  currentPosition.move = 'fk';
+  
+  mqttClient.publish('robot/command', JSON.stringify(currentPosition));
+})
 
 function moveToJointTargets(newAnglesArray, duration = 1.0) {
     jointNames.forEach((name, i) => {
@@ -478,6 +590,9 @@ function getEndEffectorPositionAndEular() {
   let position = new THREE.Vector3();
   endEffector.getWorldPosition(position)
 
+
+
+
   return {
     position: {
       x: position.x,
@@ -490,6 +605,22 @@ function getEndEffectorPositionAndEular() {
       yaw: urdfEuler.z
     }
   }
+}
+
+
+function getEndEffectorPositionAndEularAndJointsAngle(){
+  let position = getEndEffectorPositionAndEular();
+
+  position.joints = {
+    joint_1: myrobot.joints['joint_1'].angle,
+    joint_2: myrobot.joints['joint_2'].angle,
+    joint_3: myrobot.joints['joint_3'].angle,
+    joint_4: myrobot.joints['joint_4'].angle,
+    joint_5: myrobot.joints['joint_5'].angle,
+    joint_6: myrobot.joints['joint_6'].angle
+  }
+
+  return position;
 }
 
 function setTargetAngles(anglesArray) {
@@ -522,7 +653,42 @@ function animate() {
         if (t >= 1.0) moveStartTime = null;  // Done
     }
 
+    updateDisplay();
     renderer.render(scene, camera);
+}
+
+
+function updateDisplay(){
+  let position = getEndEffectorPositionAndEularAndJointsAngle();
+
+  
+  document.getElementById("pos-x").textContent = toMM(position.position.x)
+  document.getElementById("pos-y").textContent = toMM(position.position.y)
+  document.getElementById("pos-z").textContent = toMM(position.position.z)
+  document.getElementById("ori-roll").textContent = angleToDegreee(position.eular.roll)
+  document.getElementById("ori-pitch").textContent = angleToDegreee(position.eular.pitch)
+  document.getElementById("ori-yaw").textContent = angleToDegreee(position.eular.yaw)
+ 
+  document.getElementById("joint-1").textContent = angleToDegreee(position.joints["joint_1"])
+  document.getElementById("joint-2").textContent = angleToDegreee(position.joints["joint_2"])
+  document.getElementById("joint-3").textContent = angleToDegreee(position.joints["joint_3"])
+  document.getElementById("joint-4").textContent = angleToDegreee(position.joints["joint_4"])
+  document.getElementById("joint-5").textContent = angleToDegreee(position.joints["joint_5"])
+  document.getElementById("joint-6").textContent = angleToDegreee(position.joints["joint_6"])
+  
+}
+
+function angleToDegreee(radians) {
+
+
+  if (radians == 0){
+    return 0.000;
+  }
+  return  (radians * (180 / Math.PI)).toFixed(3)
+}
+
+function toMM(value){
+  return (value * 1000).toFixed(3)
 }
 
 // 
