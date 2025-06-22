@@ -49,7 +49,7 @@ def on_message(client, userdata, msg):
              payload["joints"]["joint_4"], 
              payload["joints"]["joint_5"], 
              payload["joints"]["joint_6"],
-             0
+             payload["joints"]["joint_7"],
         ]
         end_effector_frame = robot.forward_kinematics(joint_angles)     
         position = end_effector_frame[:3, 3] 
@@ -75,6 +75,7 @@ def on_message(client, userdata, msg):
                 "joint_4": payload["joints"]["joint_4"],
                 "joint_5": payload["joints"]["joint_5"],
                 "joint_6": payload["joints"]["joint_6"],
+                "joint_7": payload["joints"]["joint_7"]
             }
         }
 
@@ -94,16 +95,29 @@ def on_message(client, userdata, msg):
             payload["eular"]["yaw"]])
         target_orientation = rotation.as_matrix()  # 3
 
-        ik = robot.inverse_kinematics(target_position=target_position, target_orientation=target_orientation, orientation_mode="all")
+        initial_position = [
+            0,
+            payload["joints"]["joint_1"],
+            payload["joints"]["joint_2"],
+            payload["joints"]["joint_3"],
+            payload["joints"]["joint_4"],
+            payload["joints"]["joint_5"],
+            payload["joints"]["joint_6"],
+            payload["joints"]["joint_7"]
+        ]
+
+        ik = robot.inverse_kinematics(target_position=target_position, target_orientation=target_orientation, orientation_mode="all", initial_position=initial_position)
     
         data = {
             "joints": {
+                "joint_0": ik[0].item(),
                 "joint_1": ik[1].item(),
                 "joint_2": ik[2].item(),
                 "joint_3": ik[3].item(),
                 "joint_4": ik[4].item(),
                 "joint_5": ik[5].item(),
                 "joint_6": ik[6].item(),
+                "joint_7": ik[7].item(),
             }
         }
 

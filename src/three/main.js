@@ -100,6 +100,7 @@ loader.load(
     joints.push(robot.joints['joint_4'])
     joints.push(robot.joints['joint_5'])
     joints.push(robot.joints['joint_6'])
+    joints.push(robot.joints['joint_7'])
     jointNames.push(...Object.keys(robot.joints));
     jointNames.forEach(name => {
         jointStarts[name] = robot.joints[name].angle;
@@ -190,7 +191,8 @@ mqttClient.on('message', (topic, message) => {
       data.joints.joint_3,
       data.joints.joint_4,
       data.joints.joint_5,
-      data.joints.joint_6  
+      data.joints.joint_6,
+      data.joints.joint_7   
     ])
     // jointTargets['joint_1'] = data.joints.joint_1;
     // jointTargets['joint_2'] = data.joints.joint_2;
@@ -225,7 +227,7 @@ mqttClient.on('error', (err) => {
 
 document.getElementById('btn-center').addEventListener('click', () => {
 
-  let data = getEndEffectorPositionAndEular();
+  let data = getEndEffectorPositionAndEularAndJointsAngle();
 
   console.log(data)
 
@@ -237,6 +239,7 @@ document.getElementById('btn-center').addEventListener('click', () => {
       joint_4: 0.0,
       joint_5: 0.0,
       joint_6: 0.0,
+      joint_7: 0.0
     },
     move: 'fk'
   }))
@@ -244,20 +247,20 @@ document.getElementById('btn-center').addEventListener('click', () => {
 });
 
 document.getElementById('btn-movexplus').addEventListener('click', () => {
-  let currentPosition = getEndEffectorPositionAndEular();
+  let currentPosition = getEndEffectorPositionAndEularAndJointsAngle();
 
   currentPosition.move = 'ik';
-  currentPosition.position.x = currentPosition.position.x + 0.02; //move 5cm
+  currentPosition.position.x = currentPosition.position.x + getMovementUnit(); //move 5cm
 
   console.log(currentPosition)
   mqttClient.publish('robot/command', JSON.stringify(currentPosition));
 })
 
 document.getElementById('btn-movexminus').addEventListener('click', () => {
-  let currentPosition = getEndEffectorPositionAndEular();
+  let currentPosition = getEndEffectorPositionAndEularAndJointsAngle();
 
   currentPosition.move = 'ik';
-  currentPosition.position.x = currentPosition.position.x - 0.02; //move 5cm
+  currentPosition.position.x = currentPosition.position.x - getMovementUnit(); //move 5cm
 
   console.log(currentPosition)
   mqttClient.publish('robot/command', JSON.stringify(currentPosition));
@@ -265,20 +268,20 @@ document.getElementById('btn-movexminus').addEventListener('click', () => {
 
 
 document.getElementById('btn-moveyplus').addEventListener('click', () => {
-  let currentPosition = getEndEffectorPositionAndEular();
+  let currentPosition = getEndEffectorPositionAndEularAndJointsAngle();
 
   currentPosition.move = 'ik';
-  currentPosition.position.y = currentPosition.position.y + 0.02; //move 5cm
+  currentPosition.position.y = currentPosition.position.y + getMovementUnit(); //move 5cm
 
   console.log(currentPosition)
   mqttClient.publish('robot/command', JSON.stringify(currentPosition));
 })
 
 document.getElementById('btn-moveyminus').addEventListener('click', () => {
-  let currentPosition = getEndEffectorPositionAndEular();
+  let currentPosition = getEndEffectorPositionAndEularAndJointsAngle();
 
   currentPosition.move = 'ik';
-  currentPosition.position.y = currentPosition.position.y - 0.02; //move 5cm
+  currentPosition.position.y = currentPosition.position.y - getMovementUnit(); //move 5cm
 
   console.log(currentPosition)
   mqttClient.publish('robot/command', JSON.stringify(currentPosition));
@@ -286,20 +289,20 @@ document.getElementById('btn-moveyminus').addEventListener('click', () => {
 
 
 document.getElementById('btn-movezplus').addEventListener('click', () => {
-  let currentPosition = getEndEffectorPositionAndEular();
+  let currentPosition = getEndEffectorPositionAndEularAndJointsAngle();
 
   currentPosition.move = 'ik';
-  currentPosition.position.z = currentPosition.position.z + 0.02; //move 5cm
+  currentPosition.position.z = currentPosition.position.z + getMovementUnit(); //move 5cm
 
   console.log(currentPosition)
   mqttClient.publish('robot/command', JSON.stringify(currentPosition));
 })
 
 document.getElementById('btn-movezminus').addEventListener('click', () => {
-  let currentPosition = getEndEffectorPositionAndEular();
+  let currentPosition = getEndEffectorPositionAndEularAndJointsAngle();
 
   currentPosition.move = 'ik';
-  currentPosition.position.z = currentPosition.position.z - 0.02; //move 5cm
+  currentPosition.position.z = currentPosition.position.z - getMovementUnit(); //move 5cm
 
   console.log(currentPosition)
   mqttClient.publish('robot/command', JSON.stringify(currentPosition));
@@ -309,19 +312,19 @@ document.getElementById('btn-movezminus').addEventListener('click', () => {
 
 
 document.getElementById('btn-moverplus').addEventListener('click', () => {
-  let currentPosition = getEndEffectorPositionAndEular();
+  let currentPosition = getEndEffectorPositionAndEularAndJointsAngle();
   currentPosition.move = 'ik';
-  currentPosition.eular.roll = currentPosition.eular.roll + 0.02; //move 5cm
+  currentPosition.eular.roll = currentPosition.eular.roll + getMovementRadian(); //move 5cm
 
   console.log(currentPosition)
   mqttClient.publish('robot/command', JSON.stringify(currentPosition));
 })
 
 document.getElementById('btn-moverminus').addEventListener('click', () => {
-  let currentPosition = getEndEffectorPositionAndEular();
+  let currentPosition = getEndEffectorPositionAndEularAndJointsAngle();
 
   currentPosition.move = 'ik';
-  currentPosition.eular.roll = currentPosition.eular.roll - 0.02; //move 5cm
+  currentPosition.eular.roll = currentPosition.eular.roll - getMovementRadian(); //move 5cm
 
   console.log(currentPosition)
   mqttClient.publish('robot/command', JSON.stringify(currentPosition));
@@ -329,19 +332,19 @@ document.getElementById('btn-moverminus').addEventListener('click', () => {
 
 
 document.getElementById('btn-movepplus').addEventListener('click', () => {
-  let currentPosition = getEndEffectorPositionAndEular();
+  let currentPosition = getEndEffectorPositionAndEularAndJointsAngle();
   currentPosition.move = 'ik';
-  currentPosition.eular.pitch = currentPosition.eular.pitch + 0.02; //move 5cm
+  currentPosition.eular.pitch = currentPosition.eular.pitch + getMovementRadian(); //move 5cm
 
   console.log(currentPosition)
   mqttClient.publish('robot/command', JSON.stringify(currentPosition));
 })
 
 document.getElementById('btn-movepminus').addEventListener('click', () => {
-  let currentPosition = getEndEffectorPositionAndEular();
+  let currentPosition = getEndEffectorPositionAndEularAndJointsAngle();
 
   currentPosition.move = 'ik';
-  currentPosition.eular.pitch = currentPosition.eular.pitch - 0.02; //move 5cm
+  currentPosition.eular.pitch = currentPosition.eular.pitch - getMovementRadian(); //move 5cm
 
   console.log(currentPosition)
   mqttClient.publish('robot/command', JSON.stringify(currentPosition));
@@ -350,19 +353,19 @@ document.getElementById('btn-movepminus').addEventListener('click', () => {
 
 
 document.getElementById('btn-moveyaplus').addEventListener('click', () => {
-  let currentPosition = getEndEffectorPositionAndEular();
+  let currentPosition = getEndEffectorPositionAndEularAndJointsAngle();
   currentPosition.move = 'ik';
-  currentPosition.eular.yaw = currentPosition.eular.yaw + 0.02; //move 5cm
+  currentPosition.eular.yaw = currentPosition.eular.yaw + getMovementRadian(); //move 5cm
 
   console.log(currentPosition)
   mqttClient.publish('robot/command', JSON.stringify(currentPosition));
 })
 
 document.getElementById('btn-moveyaminus').addEventListener('click', () => {
-  let currentPosition = getEndEffectorPositionAndEular();
+  let currentPosition = getEndEffectorPositionAndEularAndJointsAngle();
 
   currentPosition.move = 'ik';
-  currentPosition.eular.yaw = currentPosition.eular.yaw - 0.02; //move 5cm
+  currentPosition.eular.yaw = currentPosition.eular.yaw - getMovementRadian(); //move 5cm
 
   console.log(currentPosition)
   mqttClient.publish('robot/command', JSON.stringify(currentPosition));
@@ -372,19 +375,19 @@ document.getElementById('btn-moveyaminus').addEventListener('click', () => {
 
 
 document.getElementById('btn-north').addEventListener('click', () => {
-  let currentPosition = getEndEffectorPositionAndEular();
+  let currentPosition = getEndEffectorPositionAndEularAndJointsAngle();
   currentPosition.move = 'ik';
-  currentPosition.position.x = currentPosition.position.x + 0.02; //move 5cm
+  currentPosition.position.x = currentPosition.position.x + getMovementUnit(); //move 5cm
 
   console.log(currentPosition)
   mqttClient.publish('robot/command', JSON.stringify(currentPosition));
 })
 
 document.getElementById('btn-south').addEventListener('click', () => {
-  let currentPosition = getEndEffectorPositionAndEular();
+  let currentPosition = getEndEffectorPositionAndEularAndJointsAngle();
 
   currentPosition.move = 'ik';
-  currentPosition.position.x = currentPosition.position.x - 0.02; //move 5cm
+  currentPosition.position.x = currentPosition.position.x - getMovementUnit(); //move 5cm
 
   console.log(currentPosition)
   mqttClient.publish('robot/command', JSON.stringify(currentPosition));
@@ -393,9 +396,9 @@ document.getElementById('btn-south').addEventListener('click', () => {
 
 
 document.getElementById('btn-east').addEventListener('click', () => {
-  let currentPosition = getEndEffectorPositionAndEular();
+  let currentPosition = getEndEffectorPositionAndEularAndJointsAngle();
   currentPosition.move = 'ik';
-  currentPosition.position.y = currentPosition.position.y - 0.02; //move 5cm
+  currentPosition.position.y = currentPosition.position.y - getMovementUnit(); //move 5cm
 
   console.log(currentPosition)
   mqttClient.publish('robot/command', JSON.stringify(currentPosition));
@@ -403,10 +406,10 @@ document.getElementById('btn-east').addEventListener('click', () => {
 
 
 document.getElementById('btn-west').addEventListener('click', () => {
-  let currentPosition = getEndEffectorPositionAndEular();
+  let currentPosition = getEndEffectorPositionAndEularAndJointsAngle();
 
   currentPosition.move = 'ik';
-  currentPosition.position.y = currentPosition.position.y + 0.02; //move 5cm
+  currentPosition.position.y = currentPosition.position.y + getMovementUnit(); //move 5cm
 
   console.log(currentPosition)
   mqttClient.publish('robot/command', JSON.stringify(currentPosition));
@@ -414,10 +417,10 @@ document.getElementById('btn-west').addEventListener('click', () => {
 
 
 document.getElementById('btn-northeast').addEventListener('click', () => {
-  let currentPosition = getEndEffectorPositionAndEular();
+  let currentPosition = getEndEffectorPositionAndEularAndJointsAngle();
   currentPosition.move = 'ik';
-  currentPosition.position.x = currentPosition.position.x + 0.02; //move 5cm
-  currentPosition.position.y = currentPosition.position.y - 0.02; //move 5cm
+  currentPosition.position.x = currentPosition.position.x + getMovementUnit(); //move 5cm
+  currentPosition.position.y = currentPosition.position.y - getMovementUnit(); //move 5cm
   console.log(currentPosition)
   mqttClient.publish('robot/command', JSON.stringify(currentPosition));
 })
@@ -425,30 +428,30 @@ document.getElementById('btn-northeast').addEventListener('click', () => {
 
 
 document.getElementById('btn-northwest').addEventListener('click', () => {
-  let currentPosition = getEndEffectorPositionAndEular();
+  let currentPosition = getEndEffectorPositionAndEularAndJointsAngle();
   currentPosition.move = 'ik';
-  currentPosition.position.x = currentPosition.position.x + 0.02; //move 5cm
-  currentPosition.position.y = currentPosition.position.y + 0.02; //move 5cm
+  currentPosition.position.x = currentPosition.position.x + getMovementUnit(); //move 5cm
+  currentPosition.position.y = currentPosition.position.y + getMovementUnit(); //move 5cm
   console.log(currentPosition)
   mqttClient.publish('robot/command', JSON.stringify(currentPosition));
 })
 
 document.getElementById('btn-southeast').addEventListener('click', () => {
-  let currentPosition = getEndEffectorPositionAndEular();
+  let currentPosition = getEndEffectorPositionAndEularAndJointsAngle();
 
   currentPosition.move = 'ik';
-  currentPosition.position.x = currentPosition.position.x - 0.02; //move 5cm
-  currentPosition.position.y = currentPosition.position.y - 0.02; //move 5cm
+  currentPosition.position.x = currentPosition.position.x - getMovementUnit(); //move 5cm
+  currentPosition.position.y = currentPosition.position.y - getMovementUnit(); //move 5cm
   console.log(currentPosition)
   mqttClient.publish('robot/command', JSON.stringify(currentPosition));
 })
 
 document.getElementById('btn-southwest').addEventListener('click', () => {
-  let currentPosition = getEndEffectorPositionAndEular();
+  let currentPosition = getEndEffectorPositionAndEularAndJointsAngle();
 
   currentPosition.move = 'ik';
-  currentPosition.position.x = currentPosition.position.x - 0.02; //move 5cm
-  currentPosition.position.y = currentPosition.position.y + 0.02; //move 5cm
+  currentPosition.position.x = currentPosition.position.x - getMovementUnit(); //move 5cm
+  currentPosition.position.y = currentPosition.position.y + getMovementUnit(); //move 5cm
   console.log(currentPosition)
   mqttClient.publish('robot/command', JSON.stringify(currentPosition));
 })
@@ -456,7 +459,7 @@ document.getElementById('btn-southwest').addEventListener('click', () => {
 document.getElementById('btn-joint1plus').addEventListener('click', () => {
   let currentPosition = getEndEffectorPositionAndEularAndJointsAngle();
 
-  currentPosition.joints["joint_1"] = currentPosition.joints["joint_1"] + 0.02;
+  currentPosition.joints["joint_1"] = currentPosition.joints["joint_1"] + getMovementRadian();
   currentPosition.move = 'fk';
 
   mqttClient.publish('robot/command', JSON.stringify(currentPosition));
@@ -465,7 +468,7 @@ document.getElementById('btn-joint1plus').addEventListener('click', () => {
 document.getElementById('btn-joint1minus').addEventListener('click', () => {
   let currentPosition = getEndEffectorPositionAndEularAndJointsAngle();
 
-  currentPosition.joints["joint_1"] = currentPosition.joints["joint_1"] - 0.02;
+  currentPosition.joints["joint_1"] = currentPosition.joints["joint_1"] - getMovementRadian();
   currentPosition.move = 'fk';
   
   mqttClient.publish('robot/command', JSON.stringify(currentPosition));
@@ -475,7 +478,7 @@ document.getElementById('btn-joint1minus').addEventListener('click', () => {
 document.getElementById('btn-joint2plus').addEventListener('click', () => {
   let currentPosition = getEndEffectorPositionAndEularAndJointsAngle();
 
-  currentPosition.joints["joint_2"] = currentPosition.joints["joint_2"] + 0.02;
+  currentPosition.joints["joint_2"] = currentPosition.joints["joint_2"] + getMovementRadian();
   currentPosition.move = 'fk';
 
   mqttClient.publish('robot/command', JSON.stringify(currentPosition));
@@ -484,7 +487,7 @@ document.getElementById('btn-joint2plus').addEventListener('click', () => {
 document.getElementById('btn-joint2minus').addEventListener('click', () => {
   let currentPosition = getEndEffectorPositionAndEularAndJointsAngle();
 
-  currentPosition.joints["joint_2"] = currentPosition.joints["joint_2"] - 0.02;
+  currentPosition.joints["joint_2"] = currentPosition.joints["joint_2"] - getMovementRadian();
   currentPosition.move = 'fk';
   
   mqttClient.publish('robot/command', JSON.stringify(currentPosition));
@@ -494,7 +497,7 @@ document.getElementById('btn-joint2minus').addEventListener('click', () => {
 document.getElementById('btn-joint3plus').addEventListener('click', () => {
   let currentPosition = getEndEffectorPositionAndEularAndJointsAngle();
 
-  currentPosition.joints["joint_3"] = currentPosition.joints["joint_3"] + 0.02;
+  currentPosition.joints["joint_3"] = currentPosition.joints["joint_3"] + getMovementRadian();
   currentPosition.move = 'fk';
 
   mqttClient.publish('robot/command', JSON.stringify(currentPosition));
@@ -503,7 +506,7 @@ document.getElementById('btn-joint3plus').addEventListener('click', () => {
 document.getElementById('btn-joint3minus').addEventListener('click', () => {
   let currentPosition = getEndEffectorPositionAndEularAndJointsAngle();
 
-  currentPosition.joints["joint_3"] = currentPosition.joints["joint_3"] - 0.02;
+  currentPosition.joints["joint_3"] = currentPosition.joints["joint_3"] - getMovementRadian();
   currentPosition.move = 'fk';
   
   mqttClient.publish('robot/command', JSON.stringify(currentPosition));
@@ -513,7 +516,7 @@ document.getElementById('btn-joint3minus').addEventListener('click', () => {
 document.getElementById('btn-joint4plus').addEventListener('click', () => {
   let currentPosition = getEndEffectorPositionAndEularAndJointsAngle();
 
-  currentPosition.joints["joint_4"] = currentPosition.joints["joint_4"] + 0.02;
+  currentPosition.joints["joint_4"] = currentPosition.joints["joint_4"] + getMovementRadian();
   currentPosition.move = 'fk';
 
   mqttClient.publish('robot/command', JSON.stringify(currentPosition));
@@ -522,7 +525,7 @@ document.getElementById('btn-joint4plus').addEventListener('click', () => {
 document.getElementById('btn-joint4minus').addEventListener('click', () => {
   let currentPosition = getEndEffectorPositionAndEularAndJointsAngle();
 
-  currentPosition.joints["joint_4"] = currentPosition.joints["joint_4"] - 0.02;
+  currentPosition.joints["joint_4"] = currentPosition.joints["joint_4"] - getMovementRadian();
   currentPosition.move = 'fk';
   
   mqttClient.publish('robot/command', JSON.stringify(currentPosition));
@@ -532,7 +535,7 @@ document.getElementById('btn-joint4minus').addEventListener('click', () => {
 document.getElementById('btn-joint5plus').addEventListener('click', () => {
   let currentPosition = getEndEffectorPositionAndEularAndJointsAngle();
 
-  currentPosition.joints["joint_5"] = currentPosition.joints["joint_5"] + 0.02;
+  currentPosition.joints["joint_5"] = currentPosition.joints["joint_5"] + getMovementRadian();
   currentPosition.move = 'fk';
 
   mqttClient.publish('robot/command', JSON.stringify(currentPosition));
@@ -541,7 +544,7 @@ document.getElementById('btn-joint5plus').addEventListener('click', () => {
 document.getElementById('btn-joint5minus').addEventListener('click', () => {
   let currentPosition = getEndEffectorPositionAndEularAndJointsAngle();
 
-  currentPosition.joints["joint_5"] = currentPosition.joints["joint_5"] - 0.02;
+  currentPosition.joints["joint_5"] = currentPosition.joints["joint_5"] - getMovementRadian();
   currentPosition.move = 'fk';
   
   mqttClient.publish('robot/command', JSON.stringify(currentPosition));
@@ -552,7 +555,7 @@ document.getElementById('btn-joint5minus').addEventListener('click', () => {
 document.getElementById('btn-joint6plus').addEventListener('click', () => {
   let currentPosition = getEndEffectorPositionAndEularAndJointsAngle();
 
-  currentPosition.joints["joint_6"] = currentPosition.joints["joint_6"] + 0.02;
+  currentPosition.joints["joint_6"] = currentPosition.joints["joint_6"] + getMovementRadian();
   currentPosition.move = 'fk';
 
   mqttClient.publish('robot/command', JSON.stringify(currentPosition));
@@ -561,7 +564,7 @@ document.getElementById('btn-joint6plus').addEventListener('click', () => {
 document.getElementById('btn-joint6minus').addEventListener('click', () => {
   let currentPosition = getEndEffectorPositionAndEularAndJointsAngle();
 
-  currentPosition.joints["joint_6"] = currentPosition.joints["joint_6"] - 0.02;
+  currentPosition.joints["joint_6"] = currentPosition.joints["joint_6"] - getMovementRadian();
   currentPosition.move = 'fk';
   
   mqttClient.publish('robot/command', JSON.stringify(currentPosition));
@@ -620,11 +623,23 @@ function getEndEffectorPositionAndEularAndJointsAngle(){
     joint_3: myrobot.joints['joint_3'].angle,
     joint_4: myrobot.joints['joint_4'].angle,
     joint_5: myrobot.joints['joint_5'].angle,
-    joint_6: myrobot.joints['joint_6'].angle
+    joint_6: myrobot.joints['joint_6'].angle,
+    joint_7: myrobot.joints['joint_7'].angle
   }
 
   return position;
 }
+
+function getMovementUnit(){
+  console.log(document.getElementById('txt-unit').value / 1000)
+  return parseFloat(document.getElementById('txt-unit').value / 1000);
+}
+
+function getMovementRadian(){
+  
+  return parseFloat(((document.getElementById('txt-degree').value *  Math.PI ) / 180).toFixed(3))
+}
+
 
 function setTargetAngles(anglesArray) {
     jointNames.forEach((name, i) => {

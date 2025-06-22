@@ -210,10 +210,12 @@
     <axis xyz="1.0 0.0 0.0"/>
     <limit effort="100" lower="-3.141593" upper="3.141593" velocity="100"/>
   </joint>
-  <joint name="joint_7" type="fixed">
+  <joint name="joint_7" type="revolute">
     <origin rpy="0 0 0" xyz="0.20982 0.0 0.0"/>
     <parent link="link_6_1"/>
+    <axis xyz="1.0 0.0 0.0"/>
     <child link="link_7_1"/>
+    <limit effort="100" lower="-3.141593" upper="3.141593" velocity="100"/>
   </joint>
 </robot>
 
