@@ -655,6 +655,7 @@ const clock = new THREE.Clock();
 function animate() {
     requestAnimationFrame(animate);
     const elapsed = clock.getElapsedTime();
+    let changed = false;
 
     if (moveStartTime !== null) {
         let t = (elapsed - moveStartTime) / moveDuration;
@@ -665,13 +666,20 @@ function animate() {
             const start = jointStarts[name];
             const target = jointTargets[name];
             const current = start + (target - start) * easedT;
+
+            if (start != target){
+              changed = true;
+            }
             myrobot.joints[name].setJointValue(current);
         });
 
         if (t >= 1.0) moveStartTime = null;  // Done
     }
 
-    updateDisplay();
+    if (changed){
+      updateDisplay();
+    }
+    
     renderer.render(scene, camera);
 }
 

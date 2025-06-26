@@ -18,6 +18,7 @@
       position: fixed;
       left: 0;
       top: 0;
+      width: 150px;
       height: 100vh;
       color: white;
       padding: 20px;
@@ -39,6 +40,17 @@
       overflow: auto
     }
 
+    .robot-command {
+      position: fixed;
+      bottom: 0;
+      left: 180px;
+      width: calc(100% - 550px);
+      padding:10px;
+      background: rgba(20, 20, 20, 0.9);
+      color: white;
+      font-family: sans-serif;
+    }
+
     .control-section {
       display: flex;
       flex-direction: column;
@@ -57,9 +69,20 @@
       gap: 5px;
     }
 
-    button {
+    .button {
       width: 40px;
       height: 40px;
+      font-size: 14px;
+      cursor: pointer;
+      border: none;
+      background-color: #444;
+      color: white;
+      border-radius: 4px;
+    }
+
+    .command-button {
+      height: 40px;
+      width: 80px;
       font-size: 14px;
       cursor: pointer;
       border: none;
@@ -102,6 +125,20 @@
       justify-content: space-between;
       gap: 20px;
     }
+
+    .screen-container {
+      position: relative;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      /* Align bottom-center box to bottom */
+    }
+
+    .listbox {
+      width: 100%;
+      margin-bottom: 10px;
+    }
   </style>
 </head>
 
@@ -131,6 +168,29 @@
       </div>
     </div>
   </div>
+  <div class="robot-command">
+    <div class="control-section-group">
+      <div class="control-section" style="width:100%">
+        <h3>Robot Command</h3>
+        <div class="control-section" style="width:100%">
+          <select id="list-command" size="12" class="listbox">
+
+          </select>
+        </div>
+      </div>
+      <div class="control-section">
+        <h3>Command</h3>
+        <div class="axis-buttons">
+          <div><button class="command-button" id="btn-clearll">Clear All</button> <button class="command-button" id="btn-deleteitem">Delete Item</button></div>
+          <div><button class="command-button" id="btn-moveup">Move ↑</button> <button class="command-button" id="btn-movedown">Move ↓</button></div>
+          <div><button class="command-button" id="btn-=copy">Copy</button> </div>
+          <div><button class="command-button" id="btn-execute" style="width:100%">Execute Command</button> </div>
+          <div></div>
+          <div></div>
+        </div>
+      </div>
+    </div>
+  </div>
   <div class="robot-controls">
 
     <div class="command-section">
@@ -155,19 +215,19 @@
           <h3>Joystick</h3>
           <div class="joystick">
             <div class="row">
-              <button id="btn-northwest">↖</button>
-              <button id="btn-north">↑</button>
-              <button id="btn-northeast">↗</button>
+              <button class="button" id="btn-northwest">↖</button>
+              <button class="button" id="btn-north">↑</button>
+              <button class="button" id="btn-northeast">↗</button>
             </div>
             <div class="row">
-              <button id="btn-west">←</button>
-              <button id="btn-center">●</button>
-              <button id="btn-east">→</button>
+              <button class="button" id="btn-west">←</button>
+              <button class="button" id="btn-center">●</button>
+              <button class="button" id="btn-east">→</button>
             </div>
             <div class="row">
-              <button id="btn-southwest">↙</button>
-              <button id="btn-south">↓</button>
-              <button id="btn-southeast">↘</button>
+              <button class="button" id="btn-southwest">↙</button>
+              <button class="button" id="btn-south">↓</button>
+              <button class="button" id="btn-southeast">↘</button>
             </div>
           </div>
         </div>
@@ -179,24 +239,24 @@
         <div class="control-section">
           <h3>Move End Effector</h3>
           <div class="axis-buttons">
-            <div><button id="btn-movexplus">+X</button> <button id="btn-movexminus">-X</button></div>
-            <div><button id="btn-moveyplus">+Y</button> <button id="btn-moveyminus">-Y</button></div>
-            <div><button id="btn-movezplus">+Z</button> <button id="btn-movezminus">-Z</button></div>
-            <div><button id="btn-moverplus">+R</button> <button id="btn-moverminus">-R</button></div>
-            <div><button id="btn-movepplus">+P</button> <button id="btn-movepminus">-P</button></div>
-            <div><button id="btn-moveyaplus">+Y</button> <button id="btn-moveyaminus">-Y</button></div>
+            <div><button class="button" id="btn-movexplus">+X</button> <button class="button" id="btn-movexminus">-X</button></div>
+            <div><button class="button" id="btn-moveyplus">+Y</button> <button class="button" id="btn-moveyminus">-Y</button></div>
+            <div><button class="button" id="btn-movezplus">+Z</button> <button class="button" id="btn-movezminus">-Z</button></div>
+            <div><button class="button" id="btn-moverplus">+R</button> <button class="button" id="btn-moverminus">-R</button></div>
+            <div><button class="button" id="btn-movepplus">+P</button> <button class="button" id="btn-movepminus">-P</button></div>
+            <div><button class="button" id="btn-moveyaplus">+Y</button> <button class="button" id="btn-moveyaminus">-Y</button></div>
           </div>
         </div>
         <!-- Joint Controls -->
         <div class="control-section">
           <h3>Joint Control</h3>
           <div class="joint-buttons">
-            <div>Joint 1: <button id="btn-joint1plus">+</button> <button id="btn-joint1minus">-</button></div>
-            <div>Joint 2: <button id="btn-joint2plus">+</button> <button id="btn-joint2minus">-</button></div>
-            <div>Joint 3: <button id="btn-joint3plus">+</button> <button id="btn-joint3minus">-</button></div>
-            <div>Joint 4: <button id="btn-joint4plus">+</button> <button id="btn-joint4minus">-</button></div>
-            <div>Joint 5: <button id="btn-joint5plus">+</button> <button id="btn-joint5minus">-</button></div>
-            <div>Joint 6: <button id="btn-joint6plus">+</button> <button id="btn-joint6minus">-</button></div>
+            <div>Joint 1: <button class="button" id="btn-joint1plus">+</button> <button class="button" id="btn-joint1minus">-</button></div>
+            <div>Joint 2: <button class="button" id="btn-joint2plus">+</button> <button class="button" id="btn-joint2minus">-</button></div>
+            <div>Joint 3: <button class="button" id="btn-joint3plus">+</button> <button class="button" id="btn-joint3minus">-</button></div>
+            <div>Joint 4: <button class="button" id="btn-joint4plus">+</button> <button class="button" id="btn-joint4minus">-</button></div>
+            <div>Joint 5: <button class="button" id="btn-joint5plus">+</button> <button class="button" id="btn-joint5minus">-</button></div>
+            <div>Joint 6: <button class="button" id="btn-joint6plus">+</button> <button class="button" id="btn-joint6minus">-</button></div>
           </div>
         </div>
       </div>
